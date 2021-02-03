@@ -3,11 +3,7 @@ package ssodam.clone.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ssodam.clone.domain.Comment;
-import ssodam.clone.domain.Member;
-import ssodam.clone.domain.Post;
 import ssodam.clone.repository.CommentRepository;
-import ssodam.clone.repository.MemberRepository;
-import ssodam.clone.repository.PostRepository;
 
 import javax.transaction.Transactional;
 
