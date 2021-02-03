@@ -28,7 +28,10 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+
 }
 
 test {

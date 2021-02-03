@@ -10,7 +10,6 @@ import ssodam.clone.repository.MemberRepository;
 import ssodam.clone.repository.PostRepository;
 
 import javax.transaction.Transactional;
-import java.net.CookieManager;
 
 @Service
 @Transactional
@@ -23,7 +22,7 @@ public class CommentService {
 
 
     /* 댓글 생성 */
-    public Long writeComment(Long postId, Long memberId, String content){
+    public Comment writeComment(Long postId, Long memberId, String content){
 
         //엔티티 조회
         Member member = memberRepository.findOne(memberId);
@@ -37,7 +36,7 @@ public class CommentService {
 
         //댓글 저장
         commentRepository.save(comment);
-        return comment.getId();
+        return comment;
     }
 
     /* 댓글이 등록 가능한지 판단 */
@@ -48,29 +47,57 @@ public class CommentService {
     }
 
     /* 댓글 수정 */
-    public void updateComment(Long commentId, String newContent){
-        // 엔티티 조회
+    public Comment updateComment(Long memberId, Long commentId, String newContent){
+        //엔티티 조회
         Comment comment = commentRepository.findOne(commentId);
+        Member member = memberRepository.findOne(memberId);
 
-        // 댓글 수정
+        //권한 판단
+        validateUpdateComment(member, comment);
+
+        //댓글 수정
         Comment.updateComment(comment, newContent);
+        commentRepository.save(comment);
+
+        return comment;
     }
 
-    /* 댓글 삭제 */
-    public void deleteComment(Long commentId){
-        // 엔티티 조회
-        Comment comment = commentRepository.findOne(commentId);
 
-        // 댓글 삭제
+
+    /* 댓글 삭제 */
+    public void deleteComment(Long memberId, Long postId, Long commentId){
+        //엔티티 조회
+        Comment comment = commentRepository.findOne(commentId);
+        Member member = memberRepository.findOne(memberId);
+        Post post = postRepository.findOne(postId);
+
+        //권한 판단
+        validateUpdateComment(member, comment);
+
+        //댓글 삭제
         Comment.deleteComment(comment);
+        //회원한테서 삭제
+        //포스트에서 삭제
+        commentRepository.delete(comment);
+    }
+
+    private void validateUpdateComment(Member member, Comment comment) {
+        if(comment.getMember().getId() != member.getId()){
+            throw new IllegalStateException("댓글 작성자가 아닙니다.");
+        }
     }
 
     /* 댓글 비추천 */
-    public void dislikeComment(Long commentId){
-        // 엔티티 조회
+    public Long dislikeComment(Long commentId){
+        //엔티티 조회
         Comment comment = commentRepository.findOne(commentId);
 
-        // 댓글 비추천
+        //댓글 비추천
         Comment.dislikeComment(comment);
+
+        //댓글 업데이트
+        commentRepository.save(comment);
+
+        return comment.getDislike();
     }
 }

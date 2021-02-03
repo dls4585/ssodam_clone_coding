@@ -15,6 +15,8 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
+    private String name;
+
     @OneToMany
     private List<Comment> comments = new ArrayList<>();
 }
