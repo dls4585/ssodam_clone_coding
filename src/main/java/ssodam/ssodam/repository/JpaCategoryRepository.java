@@ -1,8 +1,8 @@
-package ssodam.clone.repository;
+package ssodam.ssodam.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import ssodam.clone.domain.Category;
+import ssodam.ssodam.domain.Category;
 
 import javax.persistence.EntityManager;
 import java.util.List;
