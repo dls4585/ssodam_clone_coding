@@ -1,12 +1,12 @@
-package ssodam.clone.service;
+package ssodam.ssodam.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ssodam.clone.domain.Category;
-import ssodam.clone.domain.Post;
-import ssodam.clone.repository.CategoryRepository;
-import ssodam.clone.repository.PostRepository;
+import ssodam.ssodam.domain.Category;
+import ssodam.ssodam.domain.Post;
+import ssodam.ssodam.repository.CategoryRepository;
+import ssodam.ssodam.repository.PostRepository;
 
 import java.util.List;
 

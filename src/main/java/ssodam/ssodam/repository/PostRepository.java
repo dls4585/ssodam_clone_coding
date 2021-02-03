@@ -1,7 +1,7 @@
-package ssodam.clone.repository;
+package ssodam.ssodam.repository;
 
-import ssodam.clone.domain.Category;
-import ssodam.clone.domain.Post;
+import ssodam.ssodam.domain.Category;
+import ssodam.ssodam.domain.Post;
 
 import java.util.List;
 

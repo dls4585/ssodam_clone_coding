@@ -1,4 +1,4 @@
-package ssodam.clone.domain;
+package ssodam.ssodam.domain;
 
 import lombok.Getter;
 import lombok.Setter;

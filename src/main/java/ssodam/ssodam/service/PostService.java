@@ -1,6 +1,6 @@
-package ssodam.clone.service;
+package ssodam.ssodam.service;
 
-import ssodam.clone.domain.Post;
+import ssodam.ssodam.domain.Post;
 
 import java.util.List;
 

@@ -1,10 +1,10 @@
-package ssodam.clone;
+package ssodam.ssodam;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CloneApplicationTests {
+class SsodamApplicationTests {
 
 	@Test
 	void contextLoads() {
