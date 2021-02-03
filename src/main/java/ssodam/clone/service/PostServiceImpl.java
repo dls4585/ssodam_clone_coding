@@ -27,16 +27,19 @@ public class PostServiceImpl implements PostService{
         Post post = new Post();
         post.createPost(member, category, title, contents);
         postRepository.save(post);
+        // 생성 시간, 업데이트 시간 추가
+        return post.getId();
     }
 
     @Override
     @Transactional
-    public Long updatePost(Long postId, Long categoryId, String title, String contents) {
+    public void updatePost(Long postId, Long categoryId, String title, String contents) {
         Post post = postRepository.findOne(postId);
         Category category = categoryRepository.findOne(categoryId);
         post.setCategory(category);
         post.setTitle(title);
         post.setContents(contents);
+        // 업데이트 시간 추가
     }
 
     @Override

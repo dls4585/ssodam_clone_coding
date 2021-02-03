@@ -17,9 +17,10 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+// 수정 필요 (연관관계 없는 걸로)
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "member_id")
+    private Long memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id") // 우선 다대일로 설정, 후에 논의 필요
@@ -29,12 +30,11 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    @ColumnDefault("0")
-    private int commentsNo;
-
     @Column(nullable = false)
     private String title;
+
     @Column(nullable = false)
+    @Lob // 검색해보기
     private String contents;
 
     @ColumnDefault("0")
