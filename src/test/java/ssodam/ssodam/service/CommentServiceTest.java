@@ -1,4 +1,4 @@
-package ssodam.clone.service;
+package ssodam.ssodam.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -6,8 +6,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import ssodam.clone.domain.Comment;
-import ssodam.clone.repository.CommentRepository;
+import ssodam.ssodam.domain.Comment;
+import ssodam.ssodam.repository.CommentRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

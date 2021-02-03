@@ -1,9 +1,9 @@
-package ssodam.clone.service;
+package ssodam.ssodam.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ssodam.clone.domain.Comment;
-import ssodam.clone.repository.CommentRepository;
+import ssodam.ssodam.domain.Comment;
+import ssodam.ssodam.repository.CommentRepository;
 import javax.transaction.Transactional;
 
 @Service
