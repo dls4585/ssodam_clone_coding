@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @Table(name = "comments")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+// 도메인 모델 패턴으로 작성하려고 노력
 public class Comment {
 
     @Id @GeneratedValue
@@ -20,7 +21,7 @@ public class Comment {
 
     private String content;
 
-    private Long disLike;
+    private Long dislike;
 
     @ManyToOne
     @JoinColumn(name = "post_id")
@@ -40,7 +41,7 @@ public class Comment {
         comment.setMember(member);
         comment.setPost(post);
         comment.setContent(content);
-        comment.setDisLike(0L);
+        comment.setDislike(0L);
         comment.setCreateTime(LocalDateTime.now());
         comment.setUpdateTime(LocalDateTime.now());
 
@@ -76,5 +77,22 @@ public class Comment {
                 break;
             }
         }
+    }
+
+    /**
+     * 댓글 수정
+     */
+    public static void updateComment(Comment comment, String newContent) {
+        comment.setContent(newContent);
+        comment.setUpdateTime(LocalDateTime.now());
+    }
+
+    /**
+     * 댓글 비추천
+     */
+    public static void dislikeComment(Comment comment){
+        Long dislike = comment.getDislike();
+        dislike--;
+        comment.setDislike(dislike);
     }
 }

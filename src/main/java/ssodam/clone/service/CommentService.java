@@ -1,7 +1,6 @@
 package ssodam.clone.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssodam.clone.domain.Comment;
 import ssodam.clone.domain.Member;
@@ -11,7 +10,7 @@ import ssodam.clone.repository.MemberRepository;
 import ssodam.clone.repository.PostRepository;
 
 import javax.transaction.Transactional;
-import java.util.List;
+import java.net.CookieManager;
 
 @Service
 @Transactional
@@ -49,10 +48,29 @@ public class CommentService {
     }
 
     /* 댓글 수정 */
+    public void updateComment(Long commentId, String newContent){
+        // 엔티티 조회
+        Comment comment = commentRepository.findOne(commentId);
+
+        // 댓글 수정
+        Comment.updateComment(comment, newContent);
+    }
 
     /* 댓글 삭제 */
     public void deleteComment(Long commentId){
+        // 엔티티 조회
         Comment comment = commentRepository.findOne(commentId);
+
+        // 댓글 삭제
         Comment.deleteComment(comment);
+    }
+
+    /* 댓글 비추천 */
+    public void dislikeComment(Long commentId){
+        // 엔티티 조회
+        Comment comment = commentRepository.findOne(commentId);
+
+        // 댓글 비추천
+        Comment.dislikeComment(comment);
     }
 }
