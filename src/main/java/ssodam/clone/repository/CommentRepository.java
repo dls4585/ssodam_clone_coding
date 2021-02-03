@@ -22,7 +22,7 @@ public class CommentRepository {
 
     /* delete */
     public void delete(Comment comment){
-        em.detach(comment);
+        em.remove(comment);
     }
 
     /* find */

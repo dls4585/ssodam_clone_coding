@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -46,7 +47,7 @@ public class Comment {
         comment.setUpdateTime(LocalDateTime.now());
 
         // 멤버가 등록한 댓글
-        member.getComments().add(comment);
+        member.getComments().add(comment);  // 우선 list로 구현하고 나중에 작동 잘 되면 그때 쿼리로 작업해보기
 
         // 포스트에 등록된 댓글
         post.getComments().add(comment);
@@ -70,6 +71,8 @@ public class Comment {
             }
         }
 
+        // em 사용해서 삭제해보기
+
         // 포스트 댓글 목록에서 삭제
         for(Comment del : post.getComments()){
             if(del.equals(comment)){
@@ -92,7 +95,7 @@ public class Comment {
      */
     public static void dislikeComment(Comment comment){
         Long dislike = comment.getDislike();
-        dislike--;
+        dislike++;
         comment.setDislike(dislike);
     }
 }

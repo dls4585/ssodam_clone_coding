@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ssodam.clone.domain.Comment;
 import ssodam.clone.repository.CommentRepository;
-
 import javax.transaction.Transactional;
 
 @Service
@@ -31,7 +30,7 @@ public class CommentService {
         Comment comment = Comment.createComment(post, member, content);
 
         //댓글 저장
-        commentRepository.save(comment);
+        commentRepository.save(comment);    // id 생성->persist
         return comment;
     }
 
@@ -53,7 +52,7 @@ public class CommentService {
 
         //댓글 수정
         Comment.updateComment(comment, newContent);
-        commentRepository.save(comment);
+        commentRepository.save(comment);    // merge
 
         return comment;
     }
@@ -72,8 +71,9 @@ public class CommentService {
 
         //댓글 삭제
         Comment.deleteComment(comment);
-        //회원한테서 삭제
-        //포스트에서 삭제
+        //회원한테서 삭제 함수 필요    리스트에서 빼주는거
+        //포스트에서 삭제 함수 필요    리스트에서 빼주는거
+
         commentRepository.delete(comment);
     }
 
