@@ -29,4 +29,10 @@ public class JpaCategoryRepository implements CategoryRepository{
         return em.createQuery("select c from Category c", Category.class)
                 .getResultList();
     }
+
+    @Override
+    public Category findByName(String categoryName) {
+        return (Category) em.createQuery("select c from Category c where c.name =: name", Category.class)
+                .setParameter("name", categoryName);
+    }
 }

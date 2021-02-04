@@ -46,7 +46,6 @@ public class Comment {
         comment.setUpdateTime(LocalDateTime.now());
 
         // 멤버가 등록한 댓글
-        member.getComments().add(comment);  // 우선 list로 구현하고 나중에 작동 잘 되면 그때 쿼리로 작업해보기
 //        member.getComments().add(comment);  // 우선 list로 구현하고 나중에 작동 잘 되면 그때 쿼리로 작업해보기
 
         // 포스트에 등록된 댓글

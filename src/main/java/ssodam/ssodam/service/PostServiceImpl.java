@@ -10,6 +10,7 @@ import ssodam.ssodam.repository.CategoryRepository;
 import ssodam.ssodam.repository.MemberRepository;
 import ssodam.ssodam.repository.PostRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,19 +30,22 @@ public class PostServiceImpl implements PostService{
         Post post = new Post();
         post.createPost(member, category, title, contents);
         postRepository.save(post);
-        // 생성 시간, 업데이트 시간 추가
+        // 생성 시간, 업데이트 시간 추가 -> createPost에 추가했음
         return post.getId();
     }
 
     @Override
     @Transactional
-    public void updatePost(Long postId, Long categoryId, String title, String contents) {
+    public Long updatePost(Long postId, Long categoryId, String title, String contents) {
         Post post = postRepository.findOne(postId);
         Category category = categoryRepository.findOne(categoryId);
         post.setCategory(category);
         post.setTitle(title);
         post.setContents(contents);
         // 업데이트 시간 추가
+        post.setUpdateDate(LocalDateTime.now());
+
+        return post.getId();
     }
 
     @Override
@@ -58,6 +62,11 @@ public class PostServiceImpl implements PostService{
     @Override
     public List<Post> findByMember(Member member) {
         return postRepository.findByMember(member);
+    }
+
+    @Override
+    public List<Post> findByCategory(Category category) {
+        return postRepository.findByCategory(category);
     }
 
     @Override

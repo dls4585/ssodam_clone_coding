@@ -16,7 +16,7 @@ import ssodam.ssodam.repository.PostRepository;
 
 import static org.assertj.core.api.Assertions.*;
 
-@RequiredArgsConstructor
+@Transactional
 @SpringBootTest
 public class PostDomainTest {
 
@@ -27,7 +27,7 @@ public class PostDomainTest {
     @Autowired
     CategoryRepository categoryRepository;
     @Test
-    @Transactional
+
     public void 게시글검증() throws Exception {
         // given
         Member member1 = new Member();
@@ -54,10 +54,12 @@ public class PostDomainTest {
         Post findPost = postRepository.findOne(post.getId());
 
         // then
-        assertThat(findPost).isEqualTo(post);
         System.out.println(findPost.getId());
-        assertThat(findPost.getId()).isEqualTo(1L);
-        assertThat(post.getId()).isEqualTo(1L);
+        System.out.println(post.getId());
+        System.out.println(member1.getPosts());
 
+        assertThat(findPost).isEqualTo(post);
+        assertThat(post.getId()).isEqualTo(findPost.getId());
+        assertThat(member1.getPosts().size()).isEqualTo(1);
     }
 }
