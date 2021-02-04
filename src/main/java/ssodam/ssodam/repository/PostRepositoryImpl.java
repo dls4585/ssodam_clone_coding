@@ -12,40 +12,31 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class JpaPostRepository implements PostRepository{
+public abstract class PostRepositoryImpl implements PostRepository{
 
     private final EntityManager em;
 
     /**
      * create
+     * @return
      */
     @Override
-    public void save(Post post) {
+    public Post save(Post post) {
         em.persist(post);
+        return null;
     }
 
     /**
      * read
      */
-    @Override
-    public Post findOne(Long id) {
-        return em.find(Post.class, id);
-    }
 
-    @Override
-    public List<Post> findAll() {
-        return em.createQuery("select p from Post p", Post.class)
-                .getResultList();
-    }
-
-    @Override
     public  List<Post> findByMember(Member member) {
         return em.createQuery("select p from Post p where p.member = :member", Post.class)
                 .setParameter("member", member)
                 .getResultList();
     }
 
-    @Override
+
     public List<Post> findByCategory(Category category) {
         return em.createQuery("select p from Post p where p.category = :category", Post.class)
                 .setParameter("category", category)
@@ -61,8 +52,9 @@ public class JpaPostRepository implements PostRepository{
     /**
      * delete
      */
+
     public void delete(Long id) {
-        Post post = findOne(id);
+        Post post = getOne(id);
         List<Post> posts = post.getMember().getPosts();
         posts.remove(post);
 //        em.remove(post);

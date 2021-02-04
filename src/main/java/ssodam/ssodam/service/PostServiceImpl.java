@@ -37,7 +37,7 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public Long updatePost(Long postId, Long categoryId, String title, String contents) {
-        Post post = postRepository.findOne(postId);
+        Post post = postRepository.getOne(postId);
         Category category = categoryRepository.findOne(categoryId);
         post.setCategory(category);
         post.setTitle(title);
@@ -51,7 +51,7 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public void deletePost(Long postId) {
-        postRepository.delete(postId);
+        postRepository.deleteById(postId);
     }
 
     @Override
@@ -71,6 +71,6 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public Post findOne(Long postId) {
-        return postRepository.findOne(postId);
+        return postRepository.getOne(postId);
     }
 }

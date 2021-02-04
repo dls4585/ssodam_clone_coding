@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class JpaCategoryRepository implements CategoryRepository{
+public class CategoryRepositoryImpl implements CategoryRepository{
 
     private final EntityManager em;
 
