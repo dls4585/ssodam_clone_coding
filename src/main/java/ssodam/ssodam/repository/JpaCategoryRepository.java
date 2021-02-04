@@ -11,7 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JpaCategoryRepository implements CategoryRepository{
 
-    private EntityManager em;
+    private final EntityManager em;
 
     @Override
     public Long save(Category category) {

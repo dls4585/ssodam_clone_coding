@@ -7,7 +7,7 @@ import ssodam.ssodam.domain.Member;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-@Repository
+//@Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
 }

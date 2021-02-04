@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ssodam.ssodam.domain.Category;
+import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.repository.CategoryRepository;
+import ssodam.ssodam.repository.MemberRepository;
 import ssodam.ssodam.repository.PostRepository;
 
 import java.util.List;
@@ -15,14 +17,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService{
 
-    private PostRepository postRepository;
-    private MemberRepository memberRepository;
-    private CategoryRepository categoryRepository;
+    private final PostRepository postRepository;
+    private final MemberRepository memberRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     @Transactional
     public Long post(Long memberId, Long categoryId, String title, String contents) {
-//        Member member = memberRepository.findOne(memberId);
+        Member member = memberRepository.getOne(memberId);
         Category category = categoryRepository.findOne(categoryId);
         Post post = new Post();
         post.createPost(member, category, title, contents);
