@@ -3,6 +3,7 @@ package ssodam.ssodam.post.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import ssodam.ssodam.domain.Category;
 import ssodam.ssodam.domain.Member;
@@ -11,6 +12,7 @@ import ssodam.ssodam.repository.CategoryRepository;
 import ssodam.ssodam.repository.MemberRepository;
 import ssodam.ssodam.service.PostService;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -25,6 +27,8 @@ public class PostServiceTest {
     MemberRepository memberRepository;
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    EntityManager em;
 
     @Test
     public void 포스트() throws Exception {
@@ -183,6 +187,7 @@ public class PostServiceTest {
     }
 
     @Test
+    @Rollback(value = true)
     public void 삭제() throws Exception {
         // given
         Member member = new Member();
@@ -198,13 +203,41 @@ public class PostServiceTest {
 
         // when
         Long post = postService.post(memberId, categoryId, "test", "this is test");
-        assertThat(member.getPosts().size()).isEqualTo(1);
+        Long post2 = postService.post(memberId, categoryId, "test2", "this is test2");
+        assertThat(member.getPosts().size()).isEqualTo(2);
+        System.out.println("before delete");
+        List<Post> beforeD = postService.findAll();
+        System.out.println("beforeD = " + beforeD);
         postService.deletePost(post);
+
+
         // then
+        System.out.println("after delete");
         List<Post> posts = postService.findAll();
-        System.out.println(posts);
-        assertThat(posts.size()).isEqualTo(0);
-        assertThat(member.getPosts().size()).isEqualTo(0);
+        System.out.println("posts = " + posts);
+        assertThat(posts.size()).isEqualTo(1);
+        List<Post> posts1 = member.getPosts();
+        System.out.println("posts1 = " + posts1);
+        assertThat(member.getPosts().size()).isEqualTo(1);
+
+    }
+
+    @Test
+    public void 뀨() throws Exception {
+        // given
+        Member member = new Member();
+        member.setPassword("d");
+        member.setUsername("d");
+        memberRepository.save(member);
+
+        List<Member> members = memberRepository.findAll();
+
+        memberRepository.deleteById(member.getId());
+
+        assertThat(memberRepository.findAll().size()).isEqualTo(members.size()-1);
+        // when
+
+        // then
 
     }
 

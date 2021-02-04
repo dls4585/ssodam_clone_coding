@@ -63,6 +63,11 @@ public class JpaPostRepository implements PostRepository{
      */
     public void delete(Long id) {
         Post post = findOne(id);
-        em.remove(post);
+        List<Post> posts = post.getMember().getPosts();
+        posts.remove(post);
+//        em.remove(post);
+        em.createQuery("delete from Post p where p.id =: id")
+                .setParameter("id", id).executeUpdate();
+//        post.getMember().getPosts().remove(post);
     }
 }

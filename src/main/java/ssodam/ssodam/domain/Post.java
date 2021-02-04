@@ -63,4 +63,5 @@ public class Post {
         this.member.getPosts().add(this);
     }
 
+
 }
