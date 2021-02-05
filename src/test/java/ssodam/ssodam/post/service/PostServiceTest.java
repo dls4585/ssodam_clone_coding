@@ -3,6 +3,7 @@ package ssodam.ssodam.post.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import ssodam.ssodam.domain.Category;
 import ssodam.ssodam.domain.Member;
@@ -23,6 +24,8 @@ public class PostServiceTest {
 
     @Autowired
     PostService postService;
+    @Autowired
+    PostRepository postRepository;
     @Autowired
     MemberRepository memberRepository;
     @Autowired
@@ -212,23 +215,23 @@ public class PostServiceTest {
         
     }
 
-    @Test
-    public void 뀨() throws Exception {
-        // given
-        Member member = new Member();
-        member.setPassword("d");
-        member.setUsername("d");
-        memberRepository.save(member);
-
-        List<Member> members = memberRepository.findAll();
-
-        memberRepository.deleteById(member.getId());
-
-        assertThat(memberRepository.findAll().size()).isEqualTo(members.size()-1);
-        // when
-
-        // then
-
-    }
+//    @Test
+//    public void 뀨() throws Exception {
+//        // given
+//        Member member = new Member();
+//        member.setPassword("d");
+//        member.setUsername("d");
+//        memberRepository.save(member);
+//
+//        List<Member> members = memberRepository.findAll();
+//
+//        memberRepository.deleteById(member.getId());
+//
+//        assertThat(memberRepository.findAll().size()).isEqualTo(members.size()-1);
+//        // when
+//
+//        // then
+//
+//    }
 
 }
