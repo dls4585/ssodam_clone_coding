@@ -60,6 +60,7 @@ public class Post {
         this.updateDate = LocalDateTime.now();
         this.member.getPosts().add(this);
         this.category.getPosts().add(this);
+        // hello
     }
 
 
