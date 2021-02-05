@@ -18,14 +18,14 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
-    private final PostRepository postRepository;
+    private final PostService postService;
 
     /* 댓글 생성 */
     @Override
     public Comment writeComment(Long memberId, Long postId, String content) {
         //엔티티 조회
         Member member = memberRepository.getOne(memberId);
-        Post post = postRepository.findOne(postId);
+        Post post = postService.findOne(postId);
 
         //작성 유무 판단
         validateComment(content);
@@ -34,7 +34,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = Comment.createComment(post, member, content);
 
         //관계 설정
-        member.getComments().add(comment);
+//        member.getComments().add(comment);
         post.getComments().add(comment);
 
         //댓글 저장
@@ -47,7 +47,7 @@ public class CommentServiceImpl implements CommentService {
     public Comment writeSubcomment(Long memberId, Long superCommentId, String content) {
         //엔티티 조회
         Comment superComment = commentRepository.getOne(superCommentId);
-        Post post = postRepository.findOne(superComment.getPost().getId());
+        Post post = postService.findOne(superComment.getPost().getId());
         Member member = memberRepository.getOne(memberId);
 
         //대댓글 생성
@@ -94,7 +94,7 @@ public class CommentServiceImpl implements CommentService {
         //엔티티 조회
         Comment delComment = commentRepository.getOne(commentId);
         Member member = memberRepository.getOne(memberId);
-        Post post = postRepository.findOne(postId);
+        Post post = postService.findOne(postId);
 
         //권한 판단
         validAuthorityComment(member, delComment);
@@ -110,8 +110,8 @@ public class CommentServiceImpl implements CommentService {
                 if(superComment==null){
                     post.getComments()
                             .removeIf(targetComment -> targetComment.equals(finalDelComment));
-                    member.getComments()
-                            .removeIf(targetComment -> targetComment.equals(finalDelComment));
+//                    member.getComments()
+//                            .removeIf(targetComment -> targetComment.equals(finalDelComment));
                     commentRepository.delete(delComment);
                     break;
                 }
@@ -121,8 +121,8 @@ public class CommentServiceImpl implements CommentService {
                         .removeIf(targetComment -> targetComment.equals(finalDelComment));
                 post.getComments()
                         .removeIf(targetComment -> targetComment.equals(finalDelComment));
-                member.getComments()
-                        .removeIf(targetComment -> targetComment.equals(finalDelComment));
+//                member.getComments()
+//                        .removeIf(targetComment -> targetComment.equals(finalDelComment));
                 commentRepository.delete(delComment);
 
                 //superComment가 삭제된 상태였고
