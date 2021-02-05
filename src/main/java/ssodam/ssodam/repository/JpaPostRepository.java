@@ -4,6 +4,7 @@ package ssodam.ssodam.repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ssodam.ssodam.domain.Category;
+import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
 
 import javax.persistence.EntityManager;
@@ -13,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JpaPostRepository implements PostRepository{
 
-    private EntityManager em;
+    private final EntityManager em;
 
     /**
      * create
