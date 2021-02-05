@@ -1,12 +1,13 @@
+
 package ssodam.ssodam.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.parameters.P;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,6 +19,9 @@ public class Member {
 
     @Column(nullable = false)
     private String username;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    List<Post> posts = new ArrayList<>();
 
     @Column(nullable = false)
     private String password;
