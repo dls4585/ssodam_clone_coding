@@ -26,7 +26,7 @@ public class PostServiceImpl implements PostService{
     @Transactional
     public Long post(Long memberId, Long categoryId, String title, String contents) {
         Member member = memberRepository.getOne(memberId);
-        Category category = categoryRepository.findOne(categoryId);
+        Category category = categoryRepository.getOne(categoryId);
         Post post = new Post();
         post.createPost(member, category, title, contents);
         postRepository.save(post);
@@ -37,8 +37,8 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public Long updatePost(Long postId, Long categoryId, String title, String contents) {
-        Post post = postRepository.findOne(postId);
-        Category category = categoryRepository.findOne(categoryId);
+        Post post = postRepository.getOne(postId);
+        Category category = categoryRepository.getOne(categoryId);
         post.setCategory(category);
         post.setTitle(title);
         post.setContents(contents);
@@ -51,7 +51,17 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public void deletePost(Long postId) {
-        postRepository.delete(postId);
+        Post post = postRepository.getOne(postId);
+        post.getCategory().getPosts()
+                .removeIf(targetPost -> targetPost.equals(post));
+        post.getMember().getPosts()
+                .removeIf(targetPost -> targetPost.equals(post));
+        postRepository.deleteById(postId);
+    }
+
+    @Override
+    public Post findOne(Long postId) {
+        return postRepository.getOne(postId);
     }
 
     @Override
@@ -67,10 +77,5 @@ public class PostServiceImpl implements PostService{
     @Override
     public List<Post> findByCategory(Category category) {
         return postRepository.findByCategory(category);
-    }
-
-    @Override
-    public Post findOne(Long postId) {
-        return postRepository.findOne(postId);
     }
 }
