@@ -51,7 +51,6 @@ public class PostServiceTest {
 
         // then
         assertThat(post).isNotNull();
-
     }
 
     @Test
@@ -70,7 +69,7 @@ public class PostServiceTest {
         Long postId = postService.post(memberId, categoryId, "test", "this is test");
 
         // when
-        Post findPost = postRepository.getOne(postId);
+        Post findPost = postService.findOne(postId);
 
         // then
         assertThat(findPost.getId()).isEqualTo(postId);
@@ -98,7 +97,7 @@ public class PostServiceTest {
         postService.post(memberId, categoryId, "test", "this is test");
         postService.post(memberId,categoryId,"test2","this is 2nd test");
         Member findMember = memberRepository.getOne(memberId);
-        List<Post> posts = postRepository.findByMember(findMember);
+        List<Post> posts = postService.findByMember(findMember);
 
         // then
         assertThat(posts.size()).isEqualTo(2);
@@ -127,7 +126,7 @@ public class PostServiceTest {
         postService.post(memberId,categoryId,"test2","this is 2nd test");
         postService.post(memberId, categoryId, "test3", "this is 3nd test");
 
-        List<Post> all = postRepository.findAll();
+        List<Post> all = postService.findAll();
 
         // then
         assertThat(all.size()).isEqualTo(3);
@@ -151,8 +150,8 @@ public class PostServiceTest {
         postService.post(memberId, categoryId, "test", "this is test");
         postService.post(memberId,categoryId,"test2","this is 2nd test");
         postService.post(memberId, categoryId, "test3", "this is 3nd test");
-        Category findCategory = categoryRepository.findOne(categoryId);
-        List<Post> byCategory = postRepository.findByCategory(findCategory);
+        Category findCategory = categoryRepository.getOne(categoryId);
+        List<Post> byCategory = postService.findByCategory(findCategory);
         // then
         assertThat(byCategory.size()).isEqualTo(3);
 
@@ -182,10 +181,10 @@ public class PostServiceTest {
 
         // then
         assertThat(postId).isEqualTo(updated);
-        assertThat(postRepository.getOne(updated).getCategory().getId()).isEqualTo(category2Id);
-        assertThat(postRepository.getOne(updated).getCategory()).isEqualTo(category2);
-        assertThat(postRepository.getOne(updated).getTitle()).isEqualTo("test2");
-        assertThat(postRepository.getOne(updated).getContents()).isEqualTo("this is updated test");
+        assertThat(postService.findOne(updated).getCategory().getId()).isEqualTo(category2Id);
+        assertThat(postService.findOne(updated).getCategory()).isEqualTo(category2);
+        assertThat(postService.findOne(updated).getTitle()).isEqualTo("test2");
+        assertThat(postService.findOne(updated).getContents()).isEqualTo("this is updated test");
 
     }
 
@@ -203,35 +202,36 @@ public class PostServiceTest {
 
         Long postId = postService.post(member.getId(), category.getId(), "title", "contents");
 
-        List<Post> before = postRepository.findAll();
+        List<Post> before = postService.findAll();
         System.out.println("before = " + before);
         // when
         postService.deletePost(postId);
 
-        List<Post> after = postRepository.findAll();
+        List<Post> after = postService.findAll();
         System.out.println("after = " + after);
 
         // then
         assertThat(after.size()).isEqualTo(before.size()-1);
         
     }
-    @Test
-    public void 뀨() throws Exception {
-        // given
-        Member member = new Member();
-        member.setPassword("d");
-        member.setUsername("d");
-        memberRepository.save(member);
 
-        List<Member> members = memberRepository.findAll();
-
-        memberRepository.deleteById(member.getId());
-
-        assertThat(memberRepository.findAll().size()).isEqualTo(members.size()-1);
-        // when
-
-        // then
-
-    }
+//    @Test
+//    public void 뀨() throws Exception {
+//        // given
+//        Member member = new Member();
+//        member.setPassword("d");
+//        member.setUsername("d");
+//        memberRepository.save(member);
+//
+//        List<Member> members = memberRepository.findAll();
+//
+//        memberRepository.deleteById(member.getId());
+//
+//        assertThat(memberRepository.findAll().size()).isEqualTo(members.size()-1);
+//        // when
+//
+//        // then
+//
+//    }
 
 }

@@ -23,8 +23,6 @@ public class Post {
     @JoinColumn(name = "member_id")
     private Member member;
 
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id") // 우선 다대일로 설정, 후에 논의 필요
     private Category category;

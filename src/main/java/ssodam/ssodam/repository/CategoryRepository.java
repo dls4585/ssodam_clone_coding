@@ -1,13 +1,14 @@
 package ssodam.ssodam.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import ssodam.ssodam.domain.Category;
 
 import java.util.List;
 
-public interface CategoryRepository {
-    public Category findOne(Long id);
-    public List<Category> findAll();
+@Repository
+public interface CategoryRepository extends JpaRepository<Category, Long> {
+
     public Category findByName(String categoryName);
-    // 관리자 권한으로 생성 삭제 해야함 -> 논의 필요(위의 save도)
-    public Long save(Category category);
+
 }
