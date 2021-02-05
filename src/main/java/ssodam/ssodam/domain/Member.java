@@ -1,6 +1,7 @@
 
 package ssodam.ssodam.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.parameters.P;
@@ -12,6 +13,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Builder
 public class Member {
     @Id @GeneratedValue
     @Column(name = "member_id")
@@ -26,5 +28,9 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-    private String email;
+    //private String email;
+
+
+    @OneToMany(mappedBy = "member")
+    private List<Comment> comments = new ArrayList<>();
 }
