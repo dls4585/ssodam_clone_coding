@@ -10,6 +10,7 @@ import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.repository.CategoryRepository;
 import ssodam.ssodam.repository.MemberRepository;
+import ssodam.ssodam.repository.PostRepository;
 import ssodam.ssodam.service.PostService;
 
 import javax.persistence.EntityManager;
@@ -23,6 +24,8 @@ public class PostServiceTest {
 
     @Autowired
     PostService postService;
+    @Autowired
+    PostRepository postRepository;
     @Autowired
     MemberRepository memberRepository;
     @Autowired
@@ -67,7 +70,7 @@ public class PostServiceTest {
         Long postId = postService.post(memberId, categoryId, "test", "this is test");
 
         // when
-        Post findPost = postService.findOne(postId);
+        Post findPost = postRepository.getOne(postId);
 
         // then
         assertThat(findPost.getId()).isEqualTo(postId);
@@ -95,7 +98,7 @@ public class PostServiceTest {
         postService.post(memberId, categoryId, "test", "this is test");
         postService.post(memberId,categoryId,"test2","this is 2nd test");
         Member findMember = memberRepository.getOne(memberId);
-        List<Post> posts = postService.findByMember(findMember);
+        List<Post> posts = postRepository.findByMember(findMember);
 
         // then
         assertThat(posts.size()).isEqualTo(2);
@@ -124,7 +127,7 @@ public class PostServiceTest {
         postService.post(memberId,categoryId,"test2","this is 2nd test");
         postService.post(memberId, categoryId, "test3", "this is 3nd test");
 
-        List<Post> all = postService.findAll();
+        List<Post> all = postRepository.findAll();
 
         // then
         assertThat(all.size()).isEqualTo(3);
@@ -149,7 +152,7 @@ public class PostServiceTest {
         postService.post(memberId,categoryId,"test2","this is 2nd test");
         postService.post(memberId, categoryId, "test3", "this is 3nd test");
         Category findCategory = categoryRepository.findOne(categoryId);
-        List<Post> byCategory = postService.findByCategory(findCategory);
+        List<Post> byCategory = postRepository.findByCategory(findCategory);
         // then
         assertThat(byCategory.size()).isEqualTo(3);
 
@@ -179,49 +182,39 @@ public class PostServiceTest {
 
         // then
         assertThat(postId).isEqualTo(updated);
-        assertThat(postService.findOne(updated).getCategory().getId()).isEqualTo(category2Id);
-        assertThat(postService.findOne(updated).getCategory()).isEqualTo(category2);
-        assertThat(postService.findOne(updated).getTitle()).isEqualTo("test2");
-        assertThat(postService.findOne(updated).getContents()).isEqualTo("this is updated test");
+        assertThat(postRepository.getOne(updated).getCategory().getId()).isEqualTo(category2Id);
+        assertThat(postRepository.getOne(updated).getCategory()).isEqualTo(category2);
+        assertThat(postRepository.getOne(updated).getTitle()).isEqualTo("test2");
+        assertThat(postRepository.getOne(updated).getContents()).isEqualTo("this is updated test");
 
     }
 
     @Test
-    @Rollback(value = true)
     public void 삭제() throws Exception {
         // given
         Member member = new Member();
-        Category category = new Category();
-        member.setUsername("dd");
-        member.setPassword("dddd");
+        member.setUsername("p");
+        member.setPassword("d");
         memberRepository.save(member);
-        category.setName("Anony");
+
+        Category category = new Category();
+        category.setName("dd");
         categoryRepository.save(category);
 
-        Long memberId = member.getId();
-        Long categoryId = category.getId();
+        Long postId = postService.post(member.getId(), category.getId(), "title", "contents");
 
+        List<Post> before = postRepository.findAll();
+        System.out.println("before = " + before);
         // when
-        Long post = postService.post(memberId, categoryId, "test", "this is test");
-        Long post2 = postService.post(memberId, categoryId, "test2", "this is test2");
-        assertThat(member.getPosts().size()).isEqualTo(2);
-        System.out.println("before delete");
-        List<Post> beforeD = postService.findAll();
-        System.out.println("beforeD = " + beforeD);
-        postService.deletePost(post);
+        postService.deletePost(postId);
 
+        List<Post> after = postRepository.findAll();
+        System.out.println("after = " + after);
 
         // then
-        System.out.println("after delete");
-        List<Post> posts = postService.findAll();
-        System.out.println("posts = " + posts);
-        assertThat(posts.size()).isEqualTo(1);
-        List<Post> posts1 = member.getPosts();
-        System.out.println("posts1 = " + posts1);
-        assertThat(member.getPosts().size()).isEqualTo(1);
-
+        assertThat(after.size()).isEqualTo(before.size()-1);
+        
     }
-
     @Test
     public void 뀨() throws Exception {
         // given

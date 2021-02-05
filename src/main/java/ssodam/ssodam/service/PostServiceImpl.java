@@ -49,28 +49,11 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    @Transactional
     public void deletePost(Long postId) {
+        Post post = postRepository.getOne(postId);
+        post.getCategory().getPosts().removeIf(targetPost -> targetPost.equals(post));
+        post.getMember().getPosts().removeIf(targetPost -> targetPost.equals(post));
         postRepository.deleteById(postId);
     }
 
-    @Override
-    public List<Post> findAll() {
-        return postRepository.findAll();
-    }
-
-    @Override
-    public List<Post> findByMember(Member member) {
-        return postRepository.findByMember(member);
-    }
-
-    @Override
-    public List<Post> findByCategory(Category category) {
-        return postRepository.findByCategory(category);
-    }
-
-    @Override
-    public Post findOne(Long postId) {
-        return postRepository.getOne(postId);
-    }
 }

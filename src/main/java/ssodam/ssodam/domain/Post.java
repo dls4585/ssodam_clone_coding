@@ -61,6 +61,7 @@ public class Post {
         this.createDate = LocalDateTime.now();
         this.updateDate = LocalDateTime.now();
         this.member.getPosts().add(this);
+        this.category.getPosts().add(this);
     }
 
 

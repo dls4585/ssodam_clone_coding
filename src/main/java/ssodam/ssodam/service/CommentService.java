@@ -26,7 +26,7 @@ public class CommentService {
 
         //엔티티 조회
         Member member = memberRepository.getOne(memberId);
-        Post post = postRepository.findOne(postId);
+        Post post = postRepository.getOne(postId);
 
         //작성 유무 판단
         validateComment(content);
@@ -69,7 +69,7 @@ public class CommentService {
         //엔티티 조회
         Comment comment = commentRepository.findOne(commentId);
         Member member = memberRepository.getOne(memberId);
-        Post post = postRepository.findOne(postId);
+        Post post = postRepository.getOne(postId);
 
         //권한 판단
         validateUpdateComment(member, comment);

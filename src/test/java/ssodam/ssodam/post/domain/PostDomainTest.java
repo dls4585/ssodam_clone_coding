@@ -51,7 +51,7 @@ public class PostDomainTest {
 
         // when
         postRepository.save(post);
-        Post findPost = postRepository.findOne(post.getId());
+        Post findPost = postRepository.getOne(post.getId());
 
         // then
         System.out.println(findPost.getId());
