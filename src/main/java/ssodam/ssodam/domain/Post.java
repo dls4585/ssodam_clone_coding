@@ -11,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@Table(name = "post")
 public class Post {
 
     @Id @GeneratedValue
@@ -18,13 +19,12 @@ public class Post {
     private Long id;
 
 // 수정 필요 (연관관계 없는 걸로)
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id") // 우선 다대일로 설정, 후에 논의 필요
-    @Column(nullable = false)
     private Category category;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
@@ -38,9 +38,9 @@ public class Post {
     private String contents;
 
     @ColumnDefault("0")
-    private int like;
+    private int likes;
     @ColumnDefault("0")
-    private int dislike;
+    private int dislikes;
     @ColumnDefault("0")
     private int scrap;
     @ColumnDefault("0")
@@ -56,6 +56,11 @@ public class Post {
         this.category = category;
         this.title = title;
         this.contents = contents;
+        this.createDate = LocalDateTime.now();
+        this.updateDate = LocalDateTime.now();
+        this.member.getPosts().add(this);
+        this.category.getPosts().add(this);
     }
+
 
 }

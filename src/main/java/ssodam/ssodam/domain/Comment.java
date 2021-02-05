@@ -46,7 +46,7 @@ public class Comment {
         comment.setUpdateTime(LocalDateTime.now());
 
         // 멤버가 등록한 댓글
-        member.getComments().add(comment);  // 우선 list로 구현하고 나중에 작동 잘 되면 그때 쿼리로 작업해보기
+//        member.getComments().add(comment);  // 우선 list로 구현하고 나중에 작동 잘 되면 그때 쿼리로 작업해보기
 
         // 포스트에 등록된 댓글
         post.getComments().add(comment);
@@ -63,12 +63,12 @@ public class Comment {
         Post post = comment.getPost();
 
         // 멤버가 작성한 댓글 목록에서 삭제
-        for(Comment del : member.getComments()){
-            if(del.equals(comment)){
-                member.getComments().remove(del);
-                break;
-            }
-        }
+//        for(Comment del : member.getComments()){
+//            if(del.equals(comment)){
+//                member.getComments().remove(del);
+//                break;
+//            }
+//        }
 
         // em 사용해서 삭제해보기
 

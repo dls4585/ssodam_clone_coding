@@ -3,7 +3,12 @@ package ssodam.ssodam.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ssodam.ssodam.domain.Comment;
+import ssodam.ssodam.domain.Member;
+import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.repository.CommentRepository;
+import ssodam.ssodam.repository.MemberRepository;
+import ssodam.ssodam.repository.PostRepository;
+
 import javax.transaction.Transactional;
 
 @Service
@@ -20,8 +25,8 @@ public class CommentService {
     public Comment writeComment(Long postId, Long memberId, String content){
 
         //엔티티 조회
-        Member member = memberRepository.findOne(memberId);
-        Post post = postRepository.findOne(postId);
+        Member member = memberRepository.getOne(memberId);
+        Post post = postRepository.getOne(postId);
 
         //작성 유무 판단
         validateComment(content);
@@ -45,7 +50,7 @@ public class CommentService {
     public Comment updateComment(Long memberId, Long commentId, String newContent){
         //엔티티 조회
         Comment comment = commentRepository.findOne(commentId);
-        Member member = memberRepository.findOne(memberId);
+        Member member = memberRepository.getOne(memberId);
 
         //권한 판단
         validateUpdateComment(member, comment);
@@ -63,8 +68,8 @@ public class CommentService {
     public void deleteComment(Long memberId, Long postId, Long commentId){
         //엔티티 조회
         Comment comment = commentRepository.findOne(commentId);
-        Member member = memberRepository.findOne(memberId);
-        Post post = postRepository.findOne(postId);
+        Member member = memberRepository.getOne(memberId);
+        Post post = postRepository.getOne(postId);
 
         //권한 판단
         validateUpdateComment(member, comment);
