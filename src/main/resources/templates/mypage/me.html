@@ -6,9 +6,9 @@
     <div class="col-lg-4">
         <div class="useredit">
             <div class="fa-user">개인정보 수정</div>
-            <form role="form"action="/me"th:object="${memberForm}" method="post">
+            <form role="form" action="/me"th:object="${memberForm}" method="post">
                 <div class="form-group">
-                    <label th:for="name">닉네임</label>
+                    <label th:for="name">닉네임 : </label>
                     <input type="text" th:field="*{name}" class="form-control"
                         placeholder="닉네임을 입력하세요"
                         th:class="${#fields.hasErrors('name')}? 'form-control fieldError' : 'form-control'">
@@ -17,7 +17,7 @@
 <!--                    현재 닉네임 들어가도록 해야함-->
                 </div>
                 <div class="form-group">
-                    <label th:for="email">이메일</label>
+                    <label th:for="email">이메일 : </label>
                     <input type="text" th:field="*{email}" class="form-control"
                            placeholder="None">
                 </div>
@@ -25,6 +25,18 @@
             </form>
             <br/>
         </div>
+        <span th:align="center">
+            나의 전체 글 통계
+            <br>
+            <br>
+            가입 번호 : <span th:text="${member.getId()}"></span>
+            <br>
+            받은 추천 : <span th:text="${likes}"></span>
+            <br>
+            받은 비추 : <span th:text="${dislikes}"></span>
+            <br>
+            달린 댓글 : <span th:text="${member.getComments().size()}"></span>
+        </span>
     </div>
 </body>
 </html>
