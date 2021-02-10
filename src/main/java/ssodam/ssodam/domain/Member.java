@@ -33,11 +33,10 @@ public class Member implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    //private String email;
-
-
     @OneToMany(mappedBy = "member")
     private final List<Comment> comments = new ArrayList<>();
+
+    //private String email;
 
     public Member(String username, String password) {
         this.username = username;

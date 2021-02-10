@@ -8,7 +8,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import ssodam.ssodam.domain.Member;
-import ssodam.ssodam.repository.MemberRepository;
 import ssodam.ssodam.service.MemberService;
 
 import javax.validation.Valid;
@@ -21,12 +20,12 @@ public class MyPageController {
 
     @GetMapping("/me")
     public String myPageHome(Model model) {
-        model.addAttribute("memberForm", new MemberForm());
+        model.addAttribute("memberForm", new LoginForm());
         return "mypage/me";
     }
 
     @PostMapping("/me")
-    public String userEdit(@Valid MemberForm form, BindingResult result, Authentication authentication) {
+    public String userEdit(@Valid LoginForm form, BindingResult result, Authentication authentication) {
         if(result.hasErrors()) {
             return "mypage/me";
         }
