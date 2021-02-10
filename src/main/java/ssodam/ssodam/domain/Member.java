@@ -38,6 +38,7 @@ public class Member implements UserDetails {
 
     @OneToMany(mappedBy = "member")
     private final List<Comment> comments = new ArrayList<>();
+
     public Member(String username, String password) {
         this.username = username;
         this.password =password;

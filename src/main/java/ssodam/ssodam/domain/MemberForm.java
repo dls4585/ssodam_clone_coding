@@ -20,10 +20,4 @@ public class MemberForm {
         this.password = password;
     }
 
-    public Member toEntity() {
-        return Member.builder()
-                .username(username)
-                .password(password)
-                .build();
-    }
 }

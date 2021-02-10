@@ -18,7 +18,6 @@ import java.util.Optional;
 public class MyPageController {
 
     MemberService memberService;
-    MemberRepository memberRepository;
 
     @GetMapping("/me")
     public String myPageHome(Model model) {
@@ -32,7 +31,7 @@ public class MyPageController {
             return "mypage/me";
         }
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        Optional<Member> optionalMember = memberRepository.findByUsername(userDetails.getUsername());
+        Optional<Member> optionalMember = memberService.findByUsername(userDetails.getUsername());
         Member member = optionalMember.get();
         member.setUsername(form.getName());
         return "redirect:/mypage/me";

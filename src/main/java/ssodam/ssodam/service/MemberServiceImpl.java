@@ -50,5 +50,10 @@ public class MemberServiceImpl implements MemberService {
                         .password(form.getPassword())
                         .build()).getId();
     }
+
+    @Override
+    public Optional<Member> findByUsername(String username) {
+        return memberRepository.findByUsername(username);
+    }
 }
 
