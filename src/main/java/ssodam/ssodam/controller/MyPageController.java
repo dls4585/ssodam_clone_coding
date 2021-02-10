@@ -1,7 +1,6 @@
 package ssodam.ssodam.controller;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +12,6 @@ import ssodam.ssodam.repository.MemberRepository;
 import ssodam.ssodam.service.MemberService;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.Optional;
 
 @Controller

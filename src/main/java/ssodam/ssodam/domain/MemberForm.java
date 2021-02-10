@@ -23,7 +23,7 @@ public class MemberForm {
     public Member toEntity() {
         return Member.builder()
                 .username(username)
-                .password(new BCryptPasswordEncoder().encode(password))
+                .password(password)
                 .build();
     }
 }
