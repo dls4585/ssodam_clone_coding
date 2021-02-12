@@ -8,7 +8,8 @@ import java.util.Optional;
 
 
 public interface MemberService extends UserDetailsService {
-    public Long createMember(MemberForm form);
+    Long updateName(String username, String newName);
+    Long createMember(MemberForm form);
     Optional<Member> findByUsername(String username);
 }
 

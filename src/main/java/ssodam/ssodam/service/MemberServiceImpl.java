@@ -14,6 +14,7 @@ import ssodam.ssodam.domain.MemberForm;
 import ssodam.ssodam.domain.MemberRole;
 import ssodam.ssodam.repository.MemberRepository;
 
+import javax.persistence.EntityManager;
 import java.util.*;
 
 @Service
@@ -22,6 +23,7 @@ import java.util.*;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final EntityManager em;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -37,6 +39,15 @@ public class MemberServiceImpl implements MemberService {
             authorities.add(new SimpleGrantedAuthority(MemberRole.USER.getValue()));
         }
         return new Member(username, memberEntity.getPassword());
+    }
+
+    @Transactional
+    @Override
+    public Long updateName(String username, String newName) {
+        Optional<Member> optionalMember = memberRepository.findByUsername(username);
+        Member member = optionalMember.get();
+        member.setUsername(newName);
+        return member.getId();
     }
 
     @Transactional
