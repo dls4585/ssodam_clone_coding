@@ -50,6 +50,11 @@ public class MemberServiceImpl implements MemberService {
         return member.getId();
     }
 
+    @Override
+    public Long updatePassword(String username, String newPassword) {
+        return null;
+    }
+
     @Transactional
     @Override
     public Long createMember(MemberForm form) {
