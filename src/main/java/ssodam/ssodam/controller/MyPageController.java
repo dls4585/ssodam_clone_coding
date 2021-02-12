@@ -1,6 +1,7 @@
 package ssodam.ssodam.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.dom4j.rule.Mode;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -8,8 +9,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import ssodam.ssodam.domain.Comment;
 import ssodam.ssodam.domain.Member;
+import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.service.MemberService;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -61,11 +66,24 @@ public class MyPageController {
             model.addAttribute("error", "새 패스워드 불일치");
             return "mypage/passwordError";
         }
-        
+
         String encodedNewPwd = encoder.encode(form.getNewPassword());
         memberService.updatePassword(currentMember.getUsername(), encodedNewPwd);
         currentMember.setPassword(encodedNewPwd);
         return "redirect:/me";
     }
 
+    @GetMapping("contents")
+    public String myContents(Model model, @AuthenticationPrincipal Member currentMember) {
+        List<Post> posts = currentMember.getPosts();
+        model.addAttribute("posts", posts);
+        return "mypage/contents";
+    }
+
+    @GetMapping("comments")
+    public String myComments(Model model, @AuthenticationPrincipal Member currentMember) {
+        List<Comment> comments = currentMember.getComments();
+        model.addAttribute("comments", comments);
+        return "mypage/comments";
+    }
 }

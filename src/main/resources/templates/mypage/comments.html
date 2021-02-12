@@ -2,8 +2,25 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header" />
 <body>
-    <th:block th:insert="fragments/mypage-body :: mypage-body"/>
+<th:block th:insert="fragments/mypage-body :: mypage-body"/>
 
-
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+             <th>#</th>
+             <th>제목</th>
+             <th>날짜</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="comment : ${comments}">
+            <td th:text="${comment.id}"></td>
+            <td th:href="@{/comment/{id} (id=${comment.id})"  th:text="${comment.content}"></td>
+            <td th:text="${comment.createTime}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
