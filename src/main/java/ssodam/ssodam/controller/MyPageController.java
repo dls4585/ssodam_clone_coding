@@ -7,12 +7,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import ssodam.ssodam.domain.Comment;
 import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
+import ssodam.ssodam.repository.CommentRepository;
+import ssodam.ssodam.service.CommentService;
+import ssodam.ssodam.service.CommentServiceImpl;
 import ssodam.ssodam.service.MemberService;
+import ssodam.ssodam.service.PostService;
 
 import java.util.List;
 
@@ -21,6 +24,9 @@ import java.util.List;
 public class MyPageController {
 
     private final MemberService memberService;
+    private final PostService postService;
+    private final CommentService commentService;
+    private final CommentRepository commentRepository;
 
     @GetMapping("/me")
     public String myPageHome(Model model, @AuthenticationPrincipal Member currentMember) {
@@ -73,17 +79,55 @@ public class MyPageController {
         return "redirect:/me";
     }
 
-    @GetMapping("contents")
+    @GetMapping("/contents")
     public String myContents(Model model, @AuthenticationPrincipal Member currentMember) {
         List<Post> posts = currentMember.getPosts();
         model.addAttribute("posts", posts);
         return "mypage/contents";
     }
 
-    @GetMapping("comments")
+    @GetMapping("/comments")
     public String myComments(Model model, @AuthenticationPrincipal Member currentMember) {
         List<Comment> comments = currentMember.getComments();
         model.addAttribute("comments", comments);
         return "mypage/comments";
+    }
+
+    @PostMapping("/{post_id}/comments")
+    public String writeComment(@PathVariable("post_id") Long postId, CommentForm form, @AuthenticationPrincipal Member currentMember) {
+        commentService.writeComment(currentMember.getId(), postId, form.getContents());
+        return "redirect:/"+postId;
+    }
+
+    @PostMapping("/{post_id}/{comment_id}")
+    public String writeSubComment(@PathVariable("post_id") Long postId, @PathVariable("comment_id") Long commentId,
+                                  CommentForm form,@AuthenticationPrincipal Member currentMember){
+        Post post = postService.findOne(postId);
+        commentService.writeSubcomment(currentMember.getId(), commentId, form.getContents());
+        return "redirect:/" + postId + commentId;
+    }
+
+    @GetMapping("{post_id}/{comment_id}/update")
+    public String updateCommentView(@PathVariable("post_id") Long postId, @PathVariable("comment_id") Long commentId, Model model) {
+        CommentForm form = new CommentForm();
+        Comment comment = commentRepository.getOne(commentId);
+        form.setContents(comment.getContent());
+        // 모델 추가? 해당 포스트의 댓글 목록 다시?
+        model.addAttribute("commentForm", form);
+        return "redirect:/" + postId;
+    }
+
+    @PatchMapping("{post_id}/{comment_id}/update")
+    public String updateComment(@PathVariable("post_id") Long postId, @PathVariable("comment_id") Long commentId,
+                                CommentForm form, @AuthenticationPrincipal Member currentMember) {
+        commentService.updateComment(currentMember.getId(), commentId, form.getContents());
+        return "redirect:/" + postId;
+    }
+
+    @DeleteMapping("{post_id}/{comment_id}/delete")
+    public String deleteComment(@PathVariable("post_id") Long postId, @PathVariable("comment_id") Long commentId,
+                                @AuthenticationPrincipal Member currentMember) {
+        commentService.deleteComment(currentMember.getId(), postId, commentId);
+        return "redirect:/" + postId;
     }
 }
