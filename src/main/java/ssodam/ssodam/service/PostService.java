@@ -3,7 +3,6 @@ package ssodam.ssodam.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ssodam.ssodam.domain.Category;
-import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.domain.PostForm;
 
