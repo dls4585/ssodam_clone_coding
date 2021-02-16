@@ -1,10 +1,14 @@
 package ssodam.ssodam.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ssodam.ssodam.domain.Category;
 import ssodam.ssodam.domain.Post;
+import ssodam.ssodam.domain.PostForm;
 import ssodam.ssodam.repository.CategoryRepository;
 import ssodam.ssodam.repository.MemberRepository;
 import ssodam.ssodam.repository.PostRepository;
@@ -23,14 +27,8 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional
-    public Long post(Long memberId, Long categoryId, String title, String contents) {
-        Member member = memberRepository.getOne(memberId);
-        Category category = categoryRepository.getOne(categoryId);
-        Post post = new Post();
-        post.createPost(member, category, title, contents);
-        postRepository.save(post);
-        // 생성 시간, 업데이트 시간 추가 -> createPost에 추가했음
-        return post.getId();
+    public Long post(PostForm postForm) {
+       return postRepository.save(postForm.toEntity()).getId();
     }
 
     @Override
@@ -58,6 +56,7 @@ public class PostServiceImpl implements PostService{
         postRepository.deleteById(postId);
     }
 
+
     @Override
     public Post findOne(Long postId) {
         return postRepository.getOne(postId);
@@ -74,7 +73,11 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<Post> findByCategory(Category category) {
-        return postRepository.findByCategory(category);
+    public Page<Post> getPostListByCategory(Category category, Pageable pageable) {
+        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() -1);
+        pageable = PageRequest.of(page, 10);
+        return postRepository.findByCategory(category, pageable);
     }
+
+
 }

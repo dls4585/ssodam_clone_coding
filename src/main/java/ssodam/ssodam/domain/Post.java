@@ -1,5 +1,6 @@
 package ssodam.ssodam.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -49,19 +50,17 @@ public class Post {
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 
-    // == 생성 메서드 == //
-
-    public void createPost(Member member, Category category, String title, String contents) {
-        this.member = member;
-        this.category = category;
+    @Builder
+    public Post(Member member, Category category, String title, String contents){
         this.title = title;
         this.contents = contents;
+        this.category = category;
+        this.member = member;
         this.createDate = LocalDateTime.now();
         this.updateDate = LocalDateTime.now();
-        this.member.getPosts().add(this);
-        this.category.getPosts().add(this);
-        // hello
     }
 
+    public Post() {
 
+    }
 }

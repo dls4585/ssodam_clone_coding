@@ -11,7 +11,6 @@ import ssodam.ssodam.domain.MemberForm;
 import ssodam.ssodam.repository.CategoryRepository;
 import ssodam.ssodam.service.MemberService;
 import ssodam.ssodam.service.PostService;
-
 import java.util.List;
 
 @Controller
@@ -20,7 +19,6 @@ public class HomeController {
     final private MemberService memberService;
     final private PostService postService;
     final private CategoryRepository categoryRepository;
-
 
     @GetMapping("/")
     public String index() {
