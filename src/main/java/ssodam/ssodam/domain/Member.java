@@ -1,9 +1,7 @@
 
 package ssodam.ssodam.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.parameters.P;
 
 import javax.persistence.*;
@@ -14,8 +12,11 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Member {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "member_id")
     private Long id;
 
@@ -23,14 +24,15 @@ public class Member {
     private String username;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    List<Post> posts = new ArrayList<>();
+    @Builder.Default
+    private final List<Post> posts = new ArrayList<>();
 
     @Column(nullable = false)
     private String password;
 
     //private String email;
 
-
     @OneToMany(mappedBy = "member")
-    private List<Comment> comments = new ArrayList<>();
+    @Builder.Default
+    private final List<Comment> comments = new ArrayList<>();
 }
