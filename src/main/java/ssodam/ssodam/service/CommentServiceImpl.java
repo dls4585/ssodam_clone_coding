@@ -7,7 +7,6 @@ import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.repository.CommentRepository;
 import ssodam.ssodam.repository.MemberRepository;
-import ssodam.ssodam.repository.PostRepository;
 
 import javax.transaction.Transactional;
 
