@@ -10,11 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ssodam.ssodam.domain.Category;
-import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.domain.PostForm;
 import ssodam.ssodam.service.CategoryService;
-import ssodam.ssodam.service.MemberService;
 import ssodam.ssodam.service.PostService;
 
 @Controller
