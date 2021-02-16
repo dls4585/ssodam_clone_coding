@@ -13,7 +13,6 @@ import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.repository.CommentRepository;
 import ssodam.ssodam.service.CommentService;
-import ssodam.ssodam.service.CommentServiceImpl;
 import ssodam.ssodam.service.MemberService;
 import ssodam.ssodam.service.PostService;
 
@@ -68,7 +67,8 @@ public class MyPageController {
             model.addAttribute("error", "현재 패스워드 불일치");
             return "mypage/passwordError";
         }
-        if (form.getNewPassword().equals(form.getRetype())) {
+        // 현재 비밀번호랑 새 비밀번호랑 다르도록 검사해야함.
+        if (!form.getNewPassword().equals(form.getRetype())) {
             model.addAttribute("error", "새 패스워드 불일치");
             return "mypage/passwordError";
         }
@@ -107,7 +107,7 @@ public class MyPageController {
         return "redirect:/" + postId + commentId;
     }
 
-    @GetMapping("{post_id}/{comment_id}/update")
+    @GetMapping("/{post_id}/{comment_id}/update")
     public String updateCommentView(@PathVariable("post_id") Long postId, @PathVariable("comment_id") Long commentId, Model model) {
         CommentForm form = new CommentForm();
         Comment comment = commentRepository.getOne(commentId);
@@ -117,14 +117,14 @@ public class MyPageController {
         return "redirect:/" + postId;
     }
 
-    @PatchMapping("{post_id}/{comment_id}/update")
+    @PatchMapping("/{post_id}/{comment_id}/update")
     public String updateComment(@PathVariable("post_id") Long postId, @PathVariable("comment_id") Long commentId,
                                 CommentForm form, @AuthenticationPrincipal Member currentMember) {
         commentService.updateComment(currentMember.getId(), commentId, form.getContents());
         return "redirect:/" + postId;
     }
 
-    @DeleteMapping("{post_id}/{comment_id}/delete")
+    @DeleteMapping("/{post_id}/{comment_id}/delete")
     public String deleteComment(@PathVariable("post_id") Long postId, @PathVariable("comment_id") Long commentId,
                                 @AuthenticationPrincipal Member currentMember) {
         commentService.deleteComment(currentMember.getId(), postId, commentId);
