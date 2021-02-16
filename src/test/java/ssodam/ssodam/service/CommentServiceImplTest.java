@@ -2,12 +2,10 @@ package ssodam.ssodam.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import ssodam.ssodam.domain.Category;
 import ssodam.ssodam.domain.Comment;
-import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.repository.CategoryRepository;
 import ssodam.ssodam.repository.CommentRepository;
@@ -15,8 +13,6 @@ import ssodam.ssodam.repository.MemberRepository;
 import ssodam.ssodam.repository.PostRepository;
 
 import javax.transaction.Transactional;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 

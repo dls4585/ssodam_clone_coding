@@ -1,7 +1,6 @@
 package ssodam.ssodam.service;
 
 import ssodam.ssodam.domain.Category;
-import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
 
 import java.util.List;
