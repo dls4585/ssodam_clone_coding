@@ -13,6 +13,7 @@ import ssodam.ssodam.domain.Category;
 import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.domain.PostForm;
 import ssodam.ssodam.service.CategoryService;
+import ssodam.ssodam.service.MemberService;
 import ssodam.ssodam.service.PostService;
 
 @Controller
