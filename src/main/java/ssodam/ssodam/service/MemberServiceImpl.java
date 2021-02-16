@@ -9,12 +9,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+<<<<<<< HEAD
+=======
 import ssodam.ssodam.domain.Member;
+>>>>>>> upstream/main
 import ssodam.ssodam.domain.MemberForm;
 import ssodam.ssodam.domain.MemberRole;
 import ssodam.ssodam.repository.MemberRepository;
 
+<<<<<<< HEAD
+=======
 import javax.persistence.EntityManager;
+>>>>>>> upstream/main
 import java.util.*;
 
 @Service

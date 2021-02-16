@@ -1,22 +1,36 @@
 package ssodam.ssodam.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import ssodam.ssodam.domain.Category;
 import ssodam.ssodam.domain.MemberForm;
+import ssodam.ssodam.repository.CategoryRepository;
 import ssodam.ssodam.service.MemberService;
+import ssodam.ssodam.service.PostService;
+import java.util.List;
 
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class HomeController {
-    private MemberService memberService;
+    final private MemberService memberService;
+    final private PostService postService;
+    final private CategoryRepository categoryRepository;
 
     @GetMapping("/")
     public String index() {
         return "index";
+    }
+
+    @GetMapping("/home")
+    public String home(Model model) throws Exception{
+        List<Category> categoryList = categoryRepository.findAll();
+        model.addAttribute("categoryList", categoryList);
+        model.addAttribute("postService", postService);
+        return "home";
     }
 
     @GetMapping("/signup")

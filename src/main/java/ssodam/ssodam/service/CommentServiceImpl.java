@@ -8,6 +8,7 @@ import ssodam.ssodam.repository.CommentRepository;
 import ssodam.ssodam.repository.MemberRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -80,7 +81,6 @@ public class CommentServiceImpl implements CommentService {
 
         //댓글 수정
         comment.setContent(newContent);
-        commentRepository.save(comment);    // merge
 
         return comment;
     }
@@ -143,5 +143,19 @@ public class CommentServiceImpl implements CommentService {
         if (comment.getMember().getId() != member.getId()) {
             throw new IllegalStateException("댓글 작성자가 아닙니다.");
         }
+    }
+
+    /* 댓글 찾기 */
+    public Comment findOne(Long commentId){ return commentRepository.getOne(commentId); }
+
+    /* 모든 댓글 찾기 */
+    public List<Comment> findAll(){ return commentRepository.findAll(); }
+
+    /* 멤버로 댓글 찾기 */
+    public List<Comment> findByMember(Member member){ return commentRepository.findByMember(member); }
+
+    /* 포스트로 댓글 찾기 */
+    public List<Comment> findByPost(Post post){
+        return commentRepository.findByPost(post);
     }
 }
