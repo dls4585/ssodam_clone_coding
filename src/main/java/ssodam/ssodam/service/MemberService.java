@@ -8,7 +8,7 @@ import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.MemberForm;
 
 
-public interface MemberService extends UserDetailsService {
+public interface MemberService{
     public Long createMember(MemberForm form);
 
 }
