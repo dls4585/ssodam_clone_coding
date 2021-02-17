@@ -14,6 +14,10 @@ import ssodam.ssodam.service.CommentService;
 import ssodam.ssodam.service.MemberService;
 import ssodam.ssodam.service.PostService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Optional;
+
 @Controller
 @RequiredArgsConstructor
 // http://www.ssodam.com/content/1099804?prev=3&prev_content=/board/3
@@ -36,6 +40,7 @@ public class PostController {
 
 
         model.addAttribute("post", post);
+        model.addAttribute("commentForm", new CommentForm());
         return "content";       //이따 만들자
     }
 
@@ -64,12 +69,26 @@ public class PostController {
         return "redirect:/board/{categoryId}";
     }
 
-    @PostMapping("content/{postId}/comments")
-    public String writeComment(@PathVariable("postId") Long postId, CommentForm form, @AuthenticationPrincipal Member currentMember) {
-        commentService.writeComment(currentMember.getId(), postId, form.getContents());
-        return "redirect:/content/{postId}";
+    @PostMapping("/content/content/{postId}/comments")
+    public String writeComment(@PathVariable("postId") Long postId,
+                               HttpServletRequest request,
+                               CommentForm form,
+                               @AuthenticationPrincipal Member currentMember) {
+        Optional<Member> OpMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = OpMember.get();
+        commentService.writeComment(member.getId(), postId, form.getContents());
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
     }
 
+    @GetMapping("subComment/{postId}")
+    public String subCommentView(@PathVariable("postId") Long postId,
+                                 HttpServletRequest request,
+                                 Model model) {
+        model.
+
+        return "redirect:" + referer;
+    }
     @PostMapping("content/{postId}/{commentId}")
     public String writeSubComment(@PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId,
                                   CommentForm form,@AuthenticationPrincipal Member currentMember){

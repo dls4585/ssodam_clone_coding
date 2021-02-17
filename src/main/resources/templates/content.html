@@ -14,9 +14,38 @@
 <td th:text="'content: '+${post.getContents()}"></td>
 <br><br>
 
+<table>
+<tbody>
 <tr th:each="comment,commentStat: ${post.getComments()}">
-    <td th:text="'comment: '+${commentStat.index}+${comment.getContent()}"></td>
-    <br><br>
+    <td th:text="${comment.member.username} + ' ' + ${comment.createTime}"></td>
+    <br>
+    <td th:text="'comment '+${commentStat.index} + ' : ' +${comment.getContent()}"></td>
+    <a th:href="@{/subComment}">
+        답글달기
+    </a>
+    <br>
+    <td th:if="${subComment} == true">
+        <form th:object="${subCommentForm}" method="post"
+              th:action="@{content/{postId}/{commentId} (postId = ${post.id}, commentId = ${comment.id})}">
+            <input type="text" th:field="*{contents}" class="form-control" placeholder="답글달기">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <button type="submit" class="btn btn-primary">입력</button>
+        </form>
+    </td>
 </tr>
+<tr>
+    <div class="col-lg-4">
+    <td>
+        <form th:object="${commentForm}" role="form" method="post"
+              th:action="@{content/{postId}/comments (postId=${post.id})}">
+            <input type="text" th:field="*{contents}" class="form-control" placeholder="댓글달기">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <button type="submit" class="btn btn-primary">입력</button>
+        </form>
+    </td>
+    </div>
+</tr>
+</tbody>
+</table>
 </body>
 </html>
