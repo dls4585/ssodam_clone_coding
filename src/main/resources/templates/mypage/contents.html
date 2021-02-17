@@ -19,7 +19,7 @@
         <tbody>
             <tr th:each="post : ${posts}">
                 <td th:text="${post.id}"></td>
-                <td th:href="@{/post/{id} (id=${post.id})"  th:text="${post.title}"></td>
+                <td th:href="@{/post/{id} (id=${post.id})}" th:text="${post.title}"></td>
                 <td th:text="${post.member.username}"></td>
                 <td th:text="${post.likes}"></td>
                 <td th:text="${post.createDate}"></td>
