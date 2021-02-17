@@ -3,6 +3,7 @@ package ssodam.ssodam.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ssodam.ssodam.domain.Category;
+import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.domain.PostForm;
 
@@ -14,7 +15,9 @@ public interface PostService {
     public Post findOne(Long postId);
     public List<Post> findAll();
     public List<Post> findByMember(Member member);
+    List<Post> findByCategory(Category category);
     public void deletePost(Long postId);
     //새로 추가
     public Page<Post> getPostListByCategory(Category category, Pageable pageable);
+
 }

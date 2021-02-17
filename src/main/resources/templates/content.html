@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/index.css}" rel="stylesheet" type="text/css">
+    <title>ssodam clone</title>
+</head>
+<body>
+<h1>SSODAM</h1>
+
+
+<td th:text="'title: '+${post.getTitle()}"></td>
+<td th:text="'member: '+${post.getMember().getUsername()}"></td>
+<td th:text="'content: '+${post.getContents()}"></td>
+<br><br>
+
+<tr th:each="comment,commentStat: ${post.getComments()}">
+    <td th:text="'comment: '+${commentStat.index}+${comment.getContent()}"></td>
+    <br><br>
+</tr>
+</body>
+</html>
