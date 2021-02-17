@@ -30,13 +30,16 @@
                 <th>postTitle</th>
                 <th>postContent</th>
             </tr>
-            <tr th:each="post,postStat:${postList}">
-                <td th:text="${post.getId()}"></td>
+
+            <!--http://www.ssodam.com/content/1099804?prev=3&prev_content=/board/3-->
+
+            <tr th:each="post:${postList}">
+                <td th:text="${post.id}"></td>
                 <td align="left">
-                    <a th:href="@{/board(categoryId=${post.getCategory().getId()},contentId=${post.getId()})}" th:text="${post.getTitle()}"></a>
+                    <a th:href="@{/content/{postId}(postId=${post.id},prev=1,prev_content='/board/'+${post.category.id})}" th:text="${post.getTitle()}"></a>
                 </td>
                 <td align="left">
-                    <a th:href="@{/board(categoryId=${post.getCategory().getId()},contentId=${post.getId()})}" th:text="${post.getContents()}"></a>
+                    <a th:href="@{/content/{postId}(postId=${post.id},prev=1,prev_content='/board/'+${post.category.id})}" th:text="${post.getContents()}"></a>
                 </td>
             </tr>
         </table>
