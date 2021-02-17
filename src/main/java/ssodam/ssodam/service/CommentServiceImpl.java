@@ -3,6 +3,7 @@ package ssodam.ssodam.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ssodam.ssodam.domain.Comment;
+import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.repository.CommentRepository;
 import ssodam.ssodam.repository.MemberRepository;

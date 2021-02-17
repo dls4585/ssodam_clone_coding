@@ -67,7 +67,12 @@ public class MyPageController {
             model.addAttribute("error", "현재 패스워드 불일치");
             return "mypage/passwordError";
         }
-        // 현재 비밀번호랑 새 비밀번호랑 다르도록 검사해야함.
+
+        if(form.getNewPassword().equals(form.getPassword())){
+            model.addAttribute("error", "동일한 패스워드");
+            return "mypage/passwordError";
+        }
+
         if (!form.getNewPassword().equals(form.getRetype())) {
             model.addAttribute("error", "새 패스워드 불일치");
             return "mypage/passwordError";
@@ -91,43 +96,5 @@ public class MyPageController {
         List<Comment> comments = currentMember.getComments();
         model.addAttribute("comments", comments);
         return "mypage/comments";
-    }
-
-    @PostMapping("/{post_id}/comments")
-    public String writeComment(@PathVariable("post_id") Long postId, CommentForm form, @AuthenticationPrincipal Member currentMember) {
-        commentService.writeComment(currentMember.getId(), postId, form.getContents());
-        return "redirect:/"+postId;
-    }
-
-    @PostMapping("/{post_id}/{comment_id}")
-    public String writeSubComment(@PathVariable("post_id") Long postId, @PathVariable("comment_id") Long commentId,
-                                  CommentForm form,@AuthenticationPrincipal Member currentMember){
-        Post post = postService.findOne(postId);
-        commentService.writeSubcomment(currentMember.getId(), commentId, form.getContents());
-        return "redirect:/" + postId + commentId;
-    }
-
-    @GetMapping("/{post_id}/{comment_id}/update")
-    public String updateCommentView(@PathVariable("post_id") Long postId, @PathVariable("comment_id") Long commentId, Model model) {
-        CommentForm form = new CommentForm();
-        Comment comment = commentRepository.getOne(commentId);
-        form.setContents(comment.getContent());
-        // 모델 추가? 해당 포스트의 댓글 목록 다시?
-        model.addAttribute("commentForm", form);
-        return "redirect:/" + postId;
-    }
-
-    @PatchMapping("/{post_id}/{comment_id}/update")
-    public String updateComment(@PathVariable("post_id") Long postId, @PathVariable("comment_id") Long commentId,
-                                CommentForm form, @AuthenticationPrincipal Member currentMember) {
-        commentService.updateComment(currentMember.getId(), commentId, form.getContents());
-        return "redirect:/" + postId;
-    }
-
-    @DeleteMapping("/{post_id}/{comment_id}/delete")
-    public String deleteComment(@PathVariable("post_id") Long postId, @PathVariable("comment_id") Long commentId,
-                                @AuthenticationPrincipal Member currentMember) {
-        commentService.deleteComment(currentMember.getId(), postId, commentId);
-        return "redirect:/" + postId;
     }
 }
