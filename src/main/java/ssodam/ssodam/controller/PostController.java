@@ -81,20 +81,16 @@ public class PostController {
         return "redirect:" + referer;
     }
 
-    @GetMapping("subComment/{postId}")
-    public String subCommentView(@PathVariable("postId") Long postId,
-                                 HttpServletRequest request,
-                                 Model model) {
-        model.
 
-        return "redirect:" + referer;
-    }
-    @PostMapping("content/{postId}/{commentId}")
-    public String writeSubComment(@PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId,
-                                  CommentForm form,@AuthenticationPrincipal Member currentMember){
-        Post post = postService.findOne(postId);
-        commentService.writeSubcomment(currentMember.getId(), commentId, form.getContents());
-        return "redirect:/content/{postId}";
+    @PostMapping("content/content/subComment/{commentId}")
+    public String writeSubComment(@PathVariable("commentId") Long commentId, @AuthenticationPrincipal Member currentMember,
+                                  HttpServletRequest request){
+        String content = request.getParameter("content");
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+        commentService.writeSubcomment(member.getId(), commentId, content);
+        String referer = request.getHeader("Referer");
+        return "redirect:"+referer;
     }
 
     @GetMapping("content/{postId}/{comment_id}/update")
