@@ -102,7 +102,7 @@ public class PostController {
     }
 
 
-    @PatchMapping("content/content/update/{commentId}")
+    @PostMapping("content/content/update/{commentId}")
     public String updateComment(@PathVariable("commentId") Long commentId,
                                 @AuthenticationPrincipal Member currentMember,
                                 HttpServletRequest request) {
@@ -117,7 +117,7 @@ public class PostController {
         return "redirect:"+referer;
     }
 
-    @DeleteMapping("content/content/delete/{commentId}/")
+    @PostMapping("content/content/delete/{commentId}/")
     public String deleteComment(@PathVariable("commentId") Long commentId,
                                 @AuthenticationPrincipal Member currentMember,
                                 HttpServletRequest request) {
