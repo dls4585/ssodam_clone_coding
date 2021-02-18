@@ -74,46 +74,61 @@ public class PostController {
                                HttpServletRequest request,
                                CommentForm form,
                                @AuthenticationPrincipal Member currentMember) {
-        Optional<Member> OpMember = memberService.findByUsername(currentMember.getUsername());
-        Member member = OpMember.get();
+
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+
         commentService.writeComment(member.getId(), postId, form.getContents());
+
         String referer = request.getHeader("Referer");
         return "redirect:" + referer;
     }
 
 
     @PostMapping("content/content/subComment/{commentId}")
-    public String writeSubComment(@PathVariable("commentId") Long commentId, @AuthenticationPrincipal Member currentMember,
+    public String writeSubComment(@PathVariable("commentId") Long commentId,
+                                  @AuthenticationPrincipal Member currentMember,
                                   HttpServletRequest request){
+
         String content = request.getParameter("content");
+
         Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
         Member member = optionalMember.get();
+
         commentService.writeSubcomment(member.getId(), commentId, content);
+
         String referer = request.getHeader("Referer");
         return "redirect:"+referer;
     }
 
-    @GetMapping("content/{postId}/{comment_id}/update")
-    public String updateCommentView(@PathVariable("postId") Long postId, @PathVariable("comment_id") Long commentId, Model model) {
-        CommentForm form = new CommentForm();
-        Comment comment = commentService.findOne(commentId);
-        form.setContents(comment.getContent());
-        // 모델 추가? 해당 포스트의 댓글 목록 다시?
-        model.addAttribute("commentForm", form);
-        return "redirect:/content/{postId}";
+
+    @PatchMapping("content/content/update/{commentId}")
+    public String updateComment(@PathVariable("commentId") Long commentId,
+                                @AuthenticationPrincipal Member currentMember,
+                                HttpServletRequest request) {
+        String content = request.getParameter("content");
+
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+
+        commentService.updateComment(member.getId(), commentId, content);
+
+        String referer = request.getHeader("Referer");
+        return "redirect:"+referer;
     }
 
-    @PatchMapping("content/{postId}/{comment_id}/update")
-    public String updateComment(@PathVariable("postId") Long postId, @PathVariable("comment_id") Long commentId,
-                                CommentForm form, @AuthenticationPrincipal Member currentMember) {
-        commentService.updateComment(currentMember.getId(), commentId, form.getContents());
-        return "redirect:/content/{postId}";
-    }
+    @DeleteMapping("content/content/delete/{commentId}/")
+    public String deleteComment(@PathVariable("commentId") Long commentId,
+                                @AuthenticationPrincipal Member currentMember,
+                                HttpServletRequest request) {
+        Long postId = commentService.findOne(commentId).getPost().getId();
 
-    @DeleteMapping("/{postId}/{comment_id}/delete")
-    public String deleteComment(@PathVariable("postId") Long postId, @PathVariable("comment_id") Long commentId,
-                                @AuthenticationPrincipal Member currentMember) {
-        commentService.deleteComment(currentMember.getId(), postId, commentId);
-        return "redirect:/content/{postId}";
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+
+        commentService.deleteComment(member.getId(), postId, commentId);
+
+        String referer = request.getHeader("Referer");
+        return "redirect:"+referer;
     }
 }
