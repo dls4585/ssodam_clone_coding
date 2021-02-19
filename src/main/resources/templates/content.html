@@ -32,7 +32,10 @@
                         this.getAttribute('csrf'), this.getAttribute('token'))">댓글 수정</button>
             </div>
             <div class="delete_comment_button" style="display:inline">
-                <button th:action="@{content/delete/{commentId}(commentId=${comment.id})}" type="submit">댓글 삭제</button>
+                <button th:commentId="${comment.id}"
+                        th:csrf="${_csrf.parameterName}" th:token="${_csrf.token}"
+                        onclick="deleteComment(this.getAttribute('commentId'),
+                        this.getAttribute('csrf'), this.getAttribute('token'))">댓글 삭제</button>
             </div>
         </div>
         <div class="comment_content" th:text="${comment.getContent()}"></div>
@@ -106,6 +109,31 @@
         form.appendChild(button);
 
         document.getElementById('update_comment_'+commentId).appendChild(form);
+    }
+    function deleteComment(commentId, csrf_parameterName, csrf_token) {
+        let form = document.createElement('form');
+        let action = 'content/delete';
+
+        form.setAttribute("charset", "UTF-8");
+        form.setAttribute('method', 'post');
+        form.setAttribute('action', action);
+
+        let comment = document.createElement('input');
+        comment.setAttribute('type', 'hidden');
+        comment.setAttribute('name', 'commentId');
+        comment.setAttribute('value', commentId);
+
+        let csrf = document.createElement('input');
+        csrf.setAttribute('type', 'hidden');
+        csrf.setAttribute('name', csrf_parameterName);
+        csrf.setAttribute('value', csrf_token);
+
+        form.appendChild(comment);
+        form.appendChild(csrf);
+
+        document.body.appendChild(form);
+        form.submit();
+
     }
 </script>
 </body>

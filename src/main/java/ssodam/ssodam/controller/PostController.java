@@ -117,10 +117,13 @@ public class PostController {
         return "redirect:"+referer;
     }
 
-    @PostMapping("content/content/delete/{commentId}/")
-    public String deleteComment(@PathVariable("commentId") Long commentId,
-                                @AuthenticationPrincipal Member currentMember,
+    @PostMapping("content/content/delete")
+    public String deleteComment(@AuthenticationPrincipal Member currentMember,
                                 HttpServletRequest request) {
+
+        String comment = request.getParameter("commentId");
+        Long commentId = Long.parseLong(comment);
+
         Long postId = commentService.findOne(commentId).getPost().getId();
 
         Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
