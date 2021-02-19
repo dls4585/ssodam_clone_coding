@@ -38,14 +38,20 @@ public class Member implements UserDetails {
 
     //private String email;
 
-    public Member(String username, String password) {
+    @Transient
+    private Collection<? extends GrantedAuthority> authorities;
+
+    public Member(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         this.username = username;
         this.password =password;
+        this.authorities = authorities;
     }
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        return this.authorities;
     }
 
     @Override

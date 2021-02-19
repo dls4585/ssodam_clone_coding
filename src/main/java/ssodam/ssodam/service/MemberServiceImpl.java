@@ -38,7 +38,7 @@ public class MemberServiceImpl implements MemberService {
         else{
             authorities.add(new SimpleGrantedAuthority(MemberRole.USER.getValue()));
         }
-        return new Member(username, memberEntity.getPassword());
+        return new Member(username, memberEntity.getPassword(), authorities);
     }
 
     @Transactional
