@@ -136,6 +136,7 @@ public class CommentServiceImpl implements CommentService {
                 //내용과 상태를 바꿔준다.
                 delComment.setContent("삭제된 댓글입니다.");
                 delComment.setIsValid(false);
+                break;
             }
         }
     }
