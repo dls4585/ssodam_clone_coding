@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import ssodam.ssodam.domain.Category;
+import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.repository.CategoryRepository;
 import ssodam.ssodam.repository.MemberRepository;
@@ -41,8 +42,6 @@ public class PostDomainTest {
         categoryRepository.save(category);
 
         Post post = new Post();
-        post.createPost(member1, category, "test", "this is test");
-
 
 
         // when
