@@ -98,7 +98,7 @@ public class CommentServiceImpl implements CommentService {
         //권한 판단
         validAuthorityComment(member, delComment);
 
-        while(delComment!=null){
+        while(true){
             Comment finalDelComment = delComment;   // removeIf를 사용하기 위해 final 변수로 선언
 
             //하위 댓글이 존재하지 않을 경우
@@ -109,8 +109,6 @@ public class CommentServiceImpl implements CommentService {
                 if(superComment==null){
                     post.getComments()
                             .removeIf(targetComment -> targetComment.equals(finalDelComment));
-//                    member.getComments()
-//                            .removeIf(targetComment -> targetComment.equals(finalDelComment));
                     commentRepository.delete(delComment);
                     break;
                 }
@@ -120,8 +118,6 @@ public class CommentServiceImpl implements CommentService {
                         .removeIf(targetComment -> targetComment.equals(finalDelComment));
                 post.getComments()
                         .removeIf(targetComment -> targetComment.equals(finalDelComment));
-//                member.getComments()
-//                        .removeIf(targetComment -> targetComment.equals(finalDelComment));
                 commentRepository.delete(delComment);
 
                 //superComment가 삭제된 상태였고
@@ -142,7 +138,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private void validAuthorityComment(Member member, Comment comment) {
-        if (comment.getMember().getId() != member.getId()) {
+        if (!comment.getMember().getId().equals(member.getId())) {
             throw new IllegalStateException("댓글 작성자가 아닙니다.");
         }
     }

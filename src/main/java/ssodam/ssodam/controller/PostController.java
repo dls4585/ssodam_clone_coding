@@ -15,7 +15,6 @@ import ssodam.ssodam.service.MemberService;
 import ssodam.ssodam.service.PostService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Controller
@@ -84,7 +83,6 @@ public class PostController {
         return "redirect:" + referer;
     }
 
-
     @PostMapping("content/content/subComment/{commentId}")
     public String writeSubComment(@PathVariable("commentId") Long commentId,
                                   @AuthenticationPrincipal Member currentMember,
@@ -100,7 +98,6 @@ public class PostController {
         String referer = request.getHeader("Referer");
         return "redirect:"+referer;
     }
-
 
     @PostMapping("content/content/update/{commentId}")
     public String updateComment(@PathVariable("commentId") Long commentId,
