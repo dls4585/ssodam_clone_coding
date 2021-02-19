@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ssodam.ssodam.domain.Category;
 import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
+import ssodam.ssodam.domain.PostForm;
 import ssodam.ssodam.repository.CategoryRepository;
 import ssodam.ssodam.repository.MemberRepository;
 import ssodam.ssodam.repository.PostRepository;
@@ -46,7 +47,7 @@ public class PostServiceTest {
         Long memberId = member.getId();
         Long categoryId = category.getId();
         // when
-        Long post = postService.post(memberId, categoryId, "test", "this is test");
+        Long post = postService.post(new PostForm());
 
         // then
         assertThat(post).isNotNull();
@@ -65,7 +66,7 @@ public class PostServiceTest {
 
         Long memberId = member.getId();
         Long categoryId = category.getId();
-        Long postId = postService.post(memberId, categoryId, "test", "this is test");
+        Long postId = postService.post(new PostForm());
 
         // when
         Post findPost = postService.findOne(postId);
@@ -93,8 +94,8 @@ public class PostServiceTest {
         Long categoryId = category.getId();
 
         // when
-        postService.post(memberId, categoryId, "test", "this is test");
-        postService.post(memberId,categoryId,"test2","this is 2nd test");
+        postService.post(new PostForm());
+        postService.post(new PostForm());
         Member findMember = memberRepository.getOne(memberId);
         List<Post> posts = postService.findByMember(findMember);
 
@@ -121,9 +122,6 @@ public class PostServiceTest {
         Long categoryId = category.getId();
 
         // when
-        postService.post(memberId, categoryId, "test", "this is test");
-        postService.post(memberId,categoryId,"test2","this is 2nd test");
-        postService.post(memberId, categoryId, "test3", "this is 3nd test");
 
         List<Post> all = postService.findAll();
 
@@ -146,9 +144,6 @@ public class PostServiceTest {
         Long categoryId = category.getId();
 
         // when
-        postService.post(memberId, categoryId, "test", "this is test");
-        postService.post(memberId,categoryId,"test2","this is 2nd test");
-        postService.post(memberId, categoryId, "test3", "this is 3nd test");
         Category findCategory = categoryRepository.getOne(categoryId);
         List<Post> byCategory = postService.findByCategory(findCategory);
         // then
@@ -175,7 +170,7 @@ public class PostServiceTest {
         Long category2Id = category2.getId();
 
         // when
-        Long postId = postService.post(memberId, categoryId, "test", "this is test");
+        Long postId = postService.post(new PostForm());
         Long updated = postService.updatePost(postId, category2Id, "test2", "this is updated test");
 
         // then
@@ -199,7 +194,7 @@ public class PostServiceTest {
         category.setName("dd");
         categoryRepository.save(category);
 
-        Long postId = postService.post(member.getId(), category.getId(), "title", "contents");
+        Long postId = postService.post(new PostForm());
 
         List<Post> before = postService.findAll();
         System.out.println("before = " + before);
