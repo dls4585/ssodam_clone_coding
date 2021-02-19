@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/index.css}" rel="stylesheet" type="text/css">
+    <title>ssodam clone</title>
+</head>
+<body>
+<h1>SSODAM</h1>
+
+<div>
+    <a href="login.html" th:href="@{/user/login}">login</a>
+    <a href="logout.html" th:href="@{/user/logout}">log out</a>
+    <a href="signup.html" th:href="@{/user/signup}">sign up</a>
+    <a href="myinfo.html" th:href="@{/user/info}">my page</a>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>카테고리 이름</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="category : ${categoryList}" th:with="postList=${postService.findByCategory(category)}">
+        <br><br>
+        <td th:text="${category.getName()}"></td>
+        <table>
+            <tr>
+                <th>postId</th>
+                <th>postTitle</th>
+                <th>postContent</th>
+            </tr>
+
+            <!--http://www.ssodam.com/content/1099804?prev=3&prev_content=/board/3-->
+
+            <tr th:each="post:${postList}">
+                <td th:text="${post.id}"></td>
+                <td align="left">
+                    <a th:href="@{/content/{postId}(postId=${post.id},prev=1,prev_content='/board/'+${post.category.id})}" th:text="${post.getTitle()}"></a>
+                </td>
+                <td align="left">
+                    <a th:href="@{/content/{postId}(postId=${post.id},prev=1,prev_content='/board/'+${post.category.id})}" th:text="${post.getContents()}"></a>
+                </td>
+            </tr>
+        </table>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

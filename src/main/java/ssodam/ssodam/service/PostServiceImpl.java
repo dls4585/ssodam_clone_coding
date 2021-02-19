@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ssodam.ssodam.domain.Category;
+import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.domain.PostForm;
 import ssodam.ssodam.repository.CategoryRepository;
@@ -71,6 +72,11 @@ public class PostServiceImpl implements PostService{
     public List<Post> findByMember(Member member) {
         return postRepository.findByMember(member);
     }
+
+    @Override
+    public List<Post> findByCategory(Category category){ return postRepository.findByCategory(category); }
+
+
 
     @Override
     public Page<Post> getPostListByCategory(Category category, Pageable pageable) {
