@@ -28,19 +28,19 @@ public class Member implements UserDetails {
 
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private final List<Post> posts = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
 
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "member")
-    private final List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     //private String email;
 
     public Member(String username, String password) {
         this.username = username;
-        this.password =password;
+        this.password = password;
     }
 
     @Override

@@ -1,67 +1,78 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>게시판</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css" integrity="sha384-
-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-          crossorigin="anonymous">
-    <!-- Custom styles for this template -->
-    <link href="/css/jumbotron-narrow.css" rel="stylesheet">
-</head>
-<body class="container">
+<head th:replace="fragments/header :: header" />
 
-<div class="jumbotron">
-    <h2>스프링 부트 게시판</h2>
-</div>
+<body>
+    <div th:replace="fragments/nav :: fragment-nav"></div>
+    <div class="container d-flex mt-5">
 
-<table class="table">
-    <tr>
-        <th>글 번호</th>
-        <th>글쓴이</th>
-        <th>글 제목</th>
-    </tr>
-    <tr th:each="post: ${boardList}">
-        <td th:text="${post.id}"></td>
-        <td th:text="${post.member.username}">익명</td>
-        <td><a th:href="@{/content/{postId}(postId=${post.id},prev=${boardList.number+1},prev_content='/board/'+${post.category.id})}" th:text="${post.title}"></a></td>
-    </tr>
-</table>
+        <div th:replace="fragments/sidebar :: fragment-sidebar"></div>
 
-<nav style="text-align: center;">
-    <ul class="pagination"
-        th:with="start=${T(Math).floor(boardList.number/10)*10 + 1},
-                    last=(${start + 9 < boardList.totalPages ? start + 9 : boardList.totalPages})">
-        <li>
-            <a th:href="@{/board/{id}(id=${categoryName}, page=1)}" aria-label="First">
-                <span aria-hidden="true">First</span>
-            </a>
-        </li>
+        <table class="box shadow table">
+            <thead>
+                <tr>
+                    <td class="h4" colspan="6" th:text="${category.name}"></td>
+                </tr>
 
-        <li th:class="${boardList.first} ? 'disabled'">
-            <a th:href="${boardList.first} ? '#' :@{/board/{id}(id=${categoryName}, page=${boardList.number})}" aria-label="Previous">
-                <span aria-hidden="true">&lt;</span>
-            </a>
-        </li>
+                <tr>
+                    <th style="width: 10%">번호</th>
+                    <th style="width: 50%">제목</th>
+                    <th style="width: 10%">이름</th>
+                    <th style="width: 10%">추천</th>
+                    <th style="width: 10%">날짜</th>
+                    <th style="width: 10%">조회</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="post: ${boardList}">
+                    <td style="width: 10%" th:text="${post.id}"></td>
+                    <td style="width: 10%"><a th:href="@{/content/{postId}(postId=${post.id},prev=${boardList.number+1},prev_content='/board/'+${post.category.id})}" th:text="${post.title}"></a></td>
+                    <td style="width: 10%" th:text="${post.member.username}">익명</td>
+                    <td style="width: 10%" th:text="${post.likes}">추천</td>
+                    <td style="width: 10%" th:text="${#temporals.format(post.createDate, 'HH:mm')}">날짜</td>
+                    <td style="width: 10%" th:text="${post.visit}">조회</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-        <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boardList.number + 1} ? 'active'">
-            <a th:text="${page}" th:href="@{/board/{id}(id=${categoryName}, page=${page})}"></a>
-        </li>
+    <div class = "container">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center"
+                th:with="start=${T(Math).floor(boardList.number/10)*10 + 1},
+                            last=(${start + 9 < boardList.totalPages ? start + 9 : boardList.totalPages})">
+                <li class="page-item">
+                    <a th:href="@{/board/{id}(id=${category.id}, page=1)}" aria-label="First">
+                        <span aria-hidden="true">First</span>
+                    </a>
+                </li>
 
-        <li th:class="${boardList.last} ? 'disabled'">
-            <a th:href="${boardList.last} ? '#' : @{/board/{id}(id=${categoryName}, page=${boardList.number + 2})}" aria-label="Next">
-                <span aria-hidden="true">&gt;</span>
-            </a>
-        </li>
+                <li class="page-item" th:class="${boardList.first} ? 'disabled'">
+                    <a th:href="${boardList.first} ? '#' :@{/board/{id}(id=${category.id}, page=${boardList.number})}" aria-label="Previous">
+                        <span aria-hidden="true">&lt;</span>
+                    </a>
+                </li>
 
-        <li>
-            <a th:href="@{/board/{id}(id=${categoryName}, page=${boardList.totalPages})}" aria-label="Last">
-                <span aria-hidden="true">Last</span>
-            </a>
-        </li>
-    </ul>
-</nav>
+                <li class="page-item" th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boardList.number + 1} ? 'active'">
+                    <a th:text="${page}" th:href="@{/board/{id}(id=${category.id}, page=${page})}"></a>
+                </li>
 
-    <a class="btn btn-primary" role="button" th:href="@{/write/{id}(id=${categoryName})}">글쓰기</a>
-</body>
+                <li class="page-item" th:class="${boardList.last} ? 'disabled'">
+                    <a th:href="${boardList.last} ? '#' : @{/board/{id}(id=${category.id}, page=${boardList.number + 2})}" aria-label="Next">
+                        <span aria-hidden="true">&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item">
+                    <a th:href="@{/board/{id}(id=${category.id}, page=${boardList.totalPages})}" aria-label="Last">
+                        <span aria-hidden="true">Last</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <a class="btn btn-primary float-right" role="button" th:href="@{/write/{id}(id=${category.id})}">글쓰기</a>
+    </div>
+
+    </body>
 </html>
