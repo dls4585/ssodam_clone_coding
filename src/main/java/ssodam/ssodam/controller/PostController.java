@@ -24,7 +24,6 @@ public class PostController {
     private final CategoryService categoryService;
     private final CommentService commentService;
 
-
     @GetMapping("content/{postId}")
     public String board(@PathVariable("postId") Long postId,
                         @RequestParam("prev") Long prev,
@@ -32,13 +31,13 @@ public class PostController {
                         Model model){
 
         Post post = postService.findOne(postId);
-
         Long categoryId = Long.parseLong(prev_content.substring(7));
+
         model.addAttribute("post", post);
         model.addAttribute("commentForm", new CommentForm());
         model.addAttribute("prev_content", categoryId);
         model.addAttribute("prev", prev);
-        return "content";       //이따 만들자
+        return "content";
     }
 
     @GetMapping("/board/{categoryId}")
