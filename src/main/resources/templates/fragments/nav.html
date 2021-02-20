@@ -52,14 +52,12 @@
                         <li sec:authorize="isAuthenticated()"><a class="nav-link" th:href="@{/logout}">로그아웃</a></li>
                     </li>
 
-                    <th:block th:replace="loginModal :: loginModal"></th:block>
+                    <th:block th:replace="login/loginModal :: loginModal"></th:block>
                 </ul>
             </div>
         </div>
     </nav>
-
     <script>
-
     </script>
 </div>
 </html>

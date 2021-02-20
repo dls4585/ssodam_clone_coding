@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ssodam.ssodam.domain.*;
@@ -45,7 +44,7 @@ public class PostController {
         model.addAttribute("prev_content", categoryId);
         model.addAttribute("prev", prev);
       
-        return "content";
+        return "post/content";
     }
 
     @GetMapping("/board/{categoryId}")
@@ -54,14 +53,14 @@ public class PostController {
         Page<Post> boardList = postService.getPostListByCategory(category, pageable);
         model.addAttribute("boardList", boardList);
         model.addAttribute("category", category);
-        return "board";
+        return "post/board";
     }
 
     @GetMapping("/write/{categoryId}")
     public String post(@PathVariable("categoryId") Long categoryId, Model model) {
         Category category = categoryService.findOne(categoryId);
         model.addAttribute("categoryName", categoryId);
-        return "write";
+        return "post/write";
     }
 
     @PostMapping("/write/{categoryId}")

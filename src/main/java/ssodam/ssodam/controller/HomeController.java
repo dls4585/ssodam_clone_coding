@@ -1,20 +1,17 @@
 package ssodam.ssodam.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ssodam.ssodam.domain.Category;
-import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.MemberForm;
 import ssodam.ssodam.repository.CategoryRepository;
 import ssodam.ssodam.service.MemberService;
 import ssodam.ssodam.service.PostService;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
