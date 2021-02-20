@@ -23,9 +23,6 @@ import java.util.List;
 public class MyPageController {
 
     private final MemberService memberService;
-    private final PostService postService;
-    private final CommentService commentService;
-    private final CommentRepository commentRepository;
 
     @GetMapping("/me")
     public String myPageHome(Model model, @AuthenticationPrincipal Member currentMember) {
