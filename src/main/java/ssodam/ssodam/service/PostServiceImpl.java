@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ssodam.ssodam.domain.Category;
@@ -16,6 +17,7 @@ import ssodam.ssodam.repository.PostRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 
 @Service
 @Transactional(readOnly = true)
@@ -81,9 +83,14 @@ public class PostServiceImpl implements PostService{
     @Override
     public Page<Post> getPostListByCategory(Category category, Pageable pageable) {
         int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() -1);
-        pageable = PageRequest.of(page, 10);
+        pageable = PageRequest.of(page, 10, Sort.by("id").descending());
         return postRepository.findByCategory(category, pageable);
     }
 
-
+    @Override
+    @Transactional
+    public void increaseVisit(Post post) {
+        int visit = post.getVisit();
+        post.setVisit(visit+1);
+    }
 }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ssodam.ssodam.domain.*;
@@ -27,28 +28,32 @@ public class PostController {
     private final CategoryService categoryService;
     private final CommentService commentService;
 
+
     @GetMapping("content/{postId}")
-    public String board(@PathVariable("postId") Long postId,
+    public String postView(@PathVariable("postId") Long postId,
                         @RequestParam("prev") Long prev,
                         @RequestParam("prev_content") String prev_content,
                         Model model){
 
         Post post = postService.findOne(postId);
+        postService.increaseVisit(post);
+      
         Long categoryId = Long.parseLong(prev_content.substring(7));
 
         model.addAttribute("post", post);
         model.addAttribute("commentForm", new CommentForm());
         model.addAttribute("prev_content", categoryId);
         model.addAttribute("prev", prev);
+      
         return "content";
     }
 
     @GetMapping("/board/{categoryId}")
-    public String postView(@PathVariable("categoryId") Long categoryId, @PageableDefault Pageable pageable, Model model) {
+    public String board(@PathVariable("categoryId") Long categoryId, @PageableDefault Pageable pageable, Model model) {
         Category category = categoryService.findOne(categoryId);
         Page<Post> boardList = postService.getPostListByCategory(category, pageable);
         model.addAttribute("boardList", boardList);
-        model.addAttribute("categoryName", categoryId);
+        model.addAttribute("category", category);
         return "board";
     }
 
@@ -60,9 +65,10 @@ public class PostController {
     }
 
     @PostMapping("/write/{categoryId}")
-    public String writePost(@PathVariable("categoryId") Long categoryId, PostForm postForm){
+    public String writePost(@PathVariable("categoryId") Long categoryId, @AuthenticationPrincipal Member currentMember, PostForm postForm){
         Category category = categoryService.findOne(categoryId);
         postForm.setCategory(category);
+        postForm.setMember(currentMember);
         postService.post(postForm);
 
         return "redirect:/board/{categoryId}";

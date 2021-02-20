@@ -19,14 +19,14 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class HomeController {
+public class    HomeController {
     final private MemberService memberService;
     final private PostService postService;
     final private CategoryRepository categoryRepository;
 
     @GetMapping("/")
     public String index() {
-        return "index";
+        return "home";
     }
 
     @GetMapping("/home")
@@ -59,12 +59,14 @@ public class HomeController {
     }
     @GetMapping("/login/result")
     public String loginResult() {
-        return "loginSuccess";
+        return "redirect:/home";
     }
 
+    @GetMapping("/logout")
+    public String execLogout() { return "redirect:/logout/result"; }
     @GetMapping("/logout/result")
-    public String logout() {
-        return "logout";
+    public String logoutResult() {
+        return "redirect:/home";
     }
 
     @GetMapping("/fail")
