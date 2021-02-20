@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import ssodam.ssodam.domain.Category;
 import ssodam.ssodam.domain.Comment;
+import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.repository.CategoryRepository;
 import ssodam.ssodam.repository.CommentRepository;
@@ -43,7 +44,6 @@ class CommentServiceImplTest {
         member.setPassword("tel");
         memberRepository.save(member);
         categoryRepository.save(category);
-        post.createPost(member, category, "test title", "test content");
         postRepository.save(post);
 
 

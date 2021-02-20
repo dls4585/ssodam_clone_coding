@@ -15,6 +15,9 @@ import ssodam.ssodam.service.CommentService;
 import ssodam.ssodam.service.MemberService;
 import ssodam.ssodam.service.PostService;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
+
 @Controller
 @RequiredArgsConstructor
 // http://www.ssodam.com/content/1099804?prev=3&prev_content=/board/3
@@ -27,23 +30,26 @@ public class PostController {
 
 
     @GetMapping("content/{postId}")
-    public String board(@PathVariable("postId") Long postId,
+    public String postView(@PathVariable("postId") Long postId,
                         @RequestParam("prev") Long prev,
                         @RequestParam("prev_content") String prev_content,
                         Model model){
 
         Post post = postService.findOne(postId);
         postService.increaseVisit(post);
-        System.out.println("prev = " + prev);
-        System.out.println("prev_content = " + prev_content);   //분리
-
+      
+        Long categoryId = Long.parseLong(prev_content.substring(7));
 
         model.addAttribute("post", post);
-        return "content";       //이따 만들자
+        model.addAttribute("commentForm", new CommentForm());
+        model.addAttribute("prev_content", categoryId);
+        model.addAttribute("prev", prev);
+      
+        return "content";
     }
 
     @GetMapping("/board/{categoryId}")
-    public String postView(@PathVariable("categoryId") Long categoryId, @PageableDefault Pageable pageable, Model model) {
+    public String board(@PathVariable("categoryId") Long categoryId, @PageableDefault Pageable pageable, Model model) {
         Category category = categoryService.findOne(categoryId);
         Page<Post> boardList = postService.getPostListByCategory(category, pageable);
         model.addAttribute("boardList", boardList);
@@ -68,41 +74,67 @@ public class PostController {
         return "redirect:/board/{categoryId}";
     }
 
-    @PostMapping("content/{postId}/comments")
-    public String writeComment(@PathVariable("postId") Long postId, CommentForm form, @AuthenticationPrincipal Member currentMember) {
-        commentService.writeComment(currentMember.getId(), postId, form.getContents());
-        return "redirect:/content/{postId}";
+    @PostMapping("/content/content/{postId}/comments")
+    public String writeComment(@PathVariable("postId") Long postId,
+                               HttpServletRequest request,
+                               CommentForm form,
+                               @AuthenticationPrincipal Member currentMember) {
+
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+
+        commentService.writeComment(member.getId(), postId, form.getContents());
+
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
     }
 
-    @PostMapping("content/{postId}/{commentId}")
-    public String writeSubComment(@PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId,
-                                  CommentForm form,@AuthenticationPrincipal Member currentMember){
-        Post post = postService.findOne(postId);
-        commentService.writeSubcomment(currentMember.getId(), commentId, form.getContents());
-        return "redirect:/content/{postId}";
+    @PostMapping("content/content/subComment/{commentId}")
+    public String writeSubComment(@PathVariable("commentId") Long commentId,
+                                  @AuthenticationPrincipal Member currentMember,
+                                  HttpServletRequest request){
+
+        String content = request.getParameter("content");
+
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+
+        commentService.writeSubcomment(member.getId(), commentId, content);
+
+        String referer = request.getHeader("Referer");
+        return "redirect:"+referer;
     }
 
-    @GetMapping("content/{postId}/{comment_id}/update")
-    public String updateCommentView(@PathVariable("postId") Long postId, @PathVariable("comment_id") Long commentId, Model model) {
-        CommentForm form = new CommentForm();
-        Comment comment = commentService.findOne(commentId);
-        form.setContents(comment.getContent());
-        // 모델 추가? 해당 포스트의 댓글 목록 다시?
-        model.addAttribute("commentForm", form);
-        return "redirect:/content/{postId}";
+    @PostMapping("content/content/update/{commentId}")
+    public String updateComment(@PathVariable("commentId") Long commentId,
+                                @AuthenticationPrincipal Member currentMember,
+                                HttpServletRequest request) {
+        String content = request.getParameter("content");
+
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+
+        commentService.updateComment(member.getId(), commentId, content);
+
+        String referer = request.getHeader("Referer");
+        return "redirect:"+referer;
     }
 
-    @PatchMapping("content/{postId}/{comment_id}/update")
-    public String updateComment(@PathVariable("postId") Long postId, @PathVariable("comment_id") Long commentId,
-                                CommentForm form, @AuthenticationPrincipal Member currentMember) {
-        commentService.updateComment(currentMember.getId(), commentId, form.getContents());
-        return "redirect:/content/{postId}";
-    }
+    @PostMapping("content/content/delete")
+    public String deleteComment(@AuthenticationPrincipal Member currentMember,
+                                HttpServletRequest request) {
 
-    @DeleteMapping("/{postId}/{comment_id}/delete")
-    public String deleteComment(@PathVariable("postId") Long postId, @PathVariable("comment_id") Long commentId,
-                                @AuthenticationPrincipal Member currentMember) {
-        commentService.deleteComment(currentMember.getId(), postId, commentId);
-        return "redirect:/content/{postId}";
+        String comment = request.getParameter("commentId");
+        Long commentId = Long.parseLong(comment);
+
+        Long postId = commentService.findOne(commentId).getPost().getId();
+
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+
+        commentService.deleteComment(member.getId(), postId, commentId);
+
+        String referer = request.getHeader("Referer");
+        return "redirect:"+referer;
     }
 }

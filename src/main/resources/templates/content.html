@@ -14,9 +14,134 @@
 <td th:text="'content: '+${post.getContents()}"></td>
 <br><br>
 
-<tr th:each="comment,commentStat: ${post.getComments()}">
-    <td th:text="'comment: '+${commentStat.index}+${comment.getContent()}"></td>
-    <br><br>
-</tr>
+<div id="comment_area">
+    <div class="comment" th:id="'comment_'+${comment.id}" th:each="comment,commentStat: ${post.getComments()}">
+        <div class="comment_header" style="display:inline">
+            <div class="comment_user" th:text="${comment.member.username}" style="display:inline"></div>
+            <div class="comment_date" th:text="${comment.createTime}" style="display:inline"></div>
+            <div class="reply_comment_button" style="display:inline">
+                <button th:commentId="${comment.id}"
+                        th:csrf="${_csrf.parameterName}" th:token="${_csrf.token}"
+                        onclick="createSubCommentForm(this.getAttribute('commentId'),
+                        this.getAttribute('csrf'), this.getAttribute('token'))">답글달기</button>
+            </div>
+            <div class="update_comment_button" style="display: inline">
+                <button th:commentId="${comment.id}" th:comment-content="${comment.content}"
+                        th:csrf="${_csrf.parameterName}" th:token="${_csrf.token}"
+                        onclick="createUpdateForm(this.getAttribute('commentId'),  this.getAttribute('comment-content'),
+                        this.getAttribute('csrf'), this.getAttribute('token'))">댓글 수정</button>
+            </div>
+            <div class="delete_comment_button" style="display:inline">
+                <button th:commentId="${comment.id}"
+                        th:csrf="${_csrf.parameterName}" th:token="${_csrf.token}"
+                        onclick="deleteComment(this.getAttribute('commentId'),
+                        this.getAttribute('csrf'), this.getAttribute('token'))">댓글 삭제</button>
+            </div>
+        </div>
+        <div class="comment_content" th:text="${comment.getContent()}"></div>
+        <div class="reply_comment" th:id="'reply_comment_'+${comment.id}"></div>
+        <div class="update_comment" th:id="'update_comment_'+${comment.id}"></div>
+    </div>
+    <div class="new_comment">
+        <form th:object="${commentForm}" role="form" method="post"
+              th:action="@{content/{postId}/comments (postId=${post.id})}">
+            <input type="text" th:field="*{contents}" class="form-control" placeholder="댓글달기">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <button type="submit" class="btn btn-primary">입력</button>
+        </form>
+    </div>
+</div>
+  
+<div class="list_button" style="display: inline">
+    <button>
+        <a th:href="@{/board/{prev_content}(prev_content=${prev_content}, page=${prev})}">목록 보기</a>
+    </button>
+</div>
+  
+<script>
+    function createSubCommentForm(commentId, csrf_parameterName, csrf_token){
+        let form = document.createElement('form');
+        let action = "content/subComment/" + commentId;
+
+        form.setAttribute("charset", "UTF-8");
+        form.setAttribute("method", "Post");  //Post 방식
+        form.setAttribute("action", action); //요청 보낼 주소
+
+        let content = document.createElement('input');
+        content.setAttribute('type', 'text');
+        content.setAttribute('name', 'content');
+
+        let csrf = document.createElement('input');
+        csrf.setAttribute('type', 'hidden');
+        csrf.setAttribute('name', csrf_parameterName);
+        csrf.setAttribute('value', csrf_token);
+
+        let button = document.createElement('input');
+        button.setAttribute('type', 'submit');
+        button.setAttribute('text', 'submit');
+        button.setAttribute('value', 'submit');
+
+        form.appendChild(content);
+        form.appendChild(csrf);
+        form.appendChild(button);
+
+        document.getElementById('reply_comment_'+commentId).appendChild(form);
+    }
+    function createUpdateForm(commentId, comment_content, csrf_parameterName, csrf_token) {
+        let form = document.createElement('form');
+        let action = "content/update/"+commentId;
+
+        form.setAttribute("charset", "UTF-8");
+        form.setAttribute("method", "Post");  //Post 방식
+        form.setAttribute("action", action); //요청 보낼 주소
+
+        let content = document.createElement('input');
+        content.setAttribute('type', 'text');
+        content.setAttribute('name', 'content');
+        content.setAttribute('value', comment_content);
+
+        let csrf = document.createElement('input');
+        csrf.setAttribute('type', 'hidden');
+        csrf.setAttribute('name', csrf_parameterName);
+        csrf.setAttribute('value', csrf_token);
+
+        let button = document.createElement('input');
+        button.setAttribute('type', 'submit');
+        button.setAttribute('text', 'submit');
+        button.setAttribute('value', 'submit');
+
+        form.appendChild(content);
+        form.appendChild(csrf);
+        form.appendChild(button);
+
+        document.getElementById('update_comment_'+commentId).appendChild(form);
+    }
+  
+    function deleteComment(commentId, csrf_parameterName, csrf_token) {
+        let form = document.createElement('form');
+        let action = 'content/delete';
+
+        form.setAttribute("charset", "UTF-8");
+        form.setAttribute('method', 'post');
+        form.setAttribute('action', action);
+
+        let comment = document.createElement('input');
+        comment.setAttribute('type', 'hidden');
+        comment.setAttribute('name', 'commentId');
+        comment.setAttribute('value', commentId);
+
+        let csrf = document.createElement('input');
+        csrf.setAttribute('type', 'hidden');
+        csrf.setAttribute('name', csrf_parameterName);
+        csrf.setAttribute('value', csrf_token);
+
+        form.appendChild(comment);
+        form.appendChild(csrf);
+
+        document.body.appendChild(form);
+        form.submit();
+
+    }
+</script>
 </body>
 </html>
