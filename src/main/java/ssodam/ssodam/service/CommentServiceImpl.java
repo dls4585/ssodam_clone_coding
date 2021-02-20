@@ -109,8 +109,6 @@ public class CommentServiceImpl implements CommentService {
                 if(superComment==null){
                     post.getComments()
                             .removeIf(targetComment -> targetComment.equals(finalDelComment));
-//                    member.getComments()
-//                            .removeIf(targetComment -> targetComment.equals(finalDelComment));
                     commentRepository.delete(delComment);
                     break;
                 }
@@ -126,7 +124,7 @@ public class CommentServiceImpl implements CommentService {
 
                 //superComment가 삭제된 상태였고
                 //delComment를 지움으로써 더 이상 하위 댓글이 없다면 superComment도 삭제한다.
-                if(superComment.getSubComments().size()==0 && superComment.getIsValid()==false)
+                if(superComment.getSubComments().size()==0 && !superComment.getIsValid())
                     delComment = superComment;
                 else
                     break;
@@ -142,7 +140,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private void validAuthorityComment(Member member, Comment comment) {
-        if (comment.getMember().getId() != member.getId()) {
+        if (!comment.getMember().getId().equals(member.getId())) {
             throw new IllegalStateException("댓글 작성자가 아닙니다.");
         }
     }
