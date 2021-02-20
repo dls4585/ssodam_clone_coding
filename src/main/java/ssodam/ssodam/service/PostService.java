@@ -19,5 +19,5 @@ public interface PostService {
     public void deletePost(Long postId);
     //새로 추가
     public Page<Post> getPostListByCategory(Category category, Pageable pageable);
-
+    public void increaseVisit(Post post);
 }

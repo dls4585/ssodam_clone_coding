@@ -20,7 +20,7 @@ public class Post {
     private Long id;
 
 // 수정 필요 (연관관계 없는 걸로)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id")
     private Member member;
 
