@@ -44,7 +44,6 @@ class CommentServiceImplTest {
         member.setPassword("tel");
         memberRepository.save(member);
         categoryRepository.save(category);
-        post.createPost(member, category, "test title", "test content");
         postRepository.save(post);
 
 

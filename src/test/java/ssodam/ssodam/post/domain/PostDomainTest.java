@@ -42,8 +42,6 @@ public class PostDomainTest {
         categoryRepository.save(category);
 
         Post post = new Post();
-        post.createPost(member1, category, "test", "this is test");
-
 
 
         // when

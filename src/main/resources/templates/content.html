@@ -51,7 +51,13 @@
         </form>
     </div>
 </div>
-
+  
+<div class="list_button" style="display: inline">
+    <button>
+        <a th:href="@{/board/{prev_content}(prev_content=${prev_content}, page=${prev})}">목록 보기</a>
+    </button>
+</div>
+  
 <script>
     function createSubCommentForm(commentId, csrf_parameterName, csrf_token){
         let form = document.createElement('form');
@@ -110,6 +116,7 @@
 
         document.getElementById('update_comment_'+commentId).appendChild(form);
     }
+  
     function deleteComment(commentId, csrf_parameterName, csrf_token) {
         let form = document.createElement('form');
         let action = 'content/delete';

@@ -122,7 +122,7 @@ public class CommentServiceImpl implements CommentService {
 
                 //superComment가 삭제된 상태였고
                 //delComment를 지움으로써 더 이상 하위 댓글이 없다면 superComment도 삭제한다.
-                if(superComment.getSubComments().size()==0 && superComment.getIsValid()==false)
+                if(superComment.getSubComments().size()==0 && !superComment.getIsValid())
                     delComment = superComment;
                 else
                     break;

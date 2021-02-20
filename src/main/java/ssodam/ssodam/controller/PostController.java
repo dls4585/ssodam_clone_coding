@@ -34,13 +34,13 @@ public class PostController {
                         Model model){
 
         Post post = postService.findOne(postId);
-        System.out.println("prev = " + prev);
-        System.out.println("prev_content = " + prev_content);   //분리
-
+        Long categoryId = Long.parseLong(prev_content.substring(7));
 
         model.addAttribute("post", post);
         model.addAttribute("commentForm", new CommentForm());
-        return "content";       //이따 만들자
+        model.addAttribute("prev_content", categoryId);
+        model.addAttribute("prev", prev);
+        return "content";
     }
 
     @GetMapping("/board/{categoryId}")
