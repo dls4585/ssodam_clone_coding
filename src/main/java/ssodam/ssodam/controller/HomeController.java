@@ -47,7 +47,7 @@ public class    HomeController {
 
     @GetMapping("/login")
     public String login() {
-        return "login/loginModal";
+        return "login/login";
     }
 
     @PostMapping("/login")

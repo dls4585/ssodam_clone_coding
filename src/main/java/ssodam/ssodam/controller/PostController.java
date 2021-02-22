@@ -138,7 +138,7 @@ public class PostController {
         return "redirect:"+referer;
     }
 
-    @PostMapping("/search/{categoryId}")
+    @GetMapping("/search/{categoryId}")
     public String searchPost(HttpServletRequest request,
                              @PageableDefault Pageable pageable,
                              @PathVariable("categoryId") Long categoryId,
