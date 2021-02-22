@@ -15,6 +15,7 @@ import ssodam.ssodam.service.MemberService;
 import ssodam.ssodam.service.PostService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -50,8 +51,8 @@ public class PostController {
     @GetMapping("/board/{categoryId}")
     public String board(@PathVariable("categoryId") Long categoryId, @PageableDefault Pageable pageable, Model model) {
         Category category = categoryService.findOne(categoryId);
-        Page<Post> boardList = postService.getPostListByCategory(category, pageable);
-        model.addAttribute("boardList", boardList);
+        Page<Post> postList = postService.getPostListByCategory(category, pageable);
+        model.addAttribute("boardList", postList);
         model.addAttribute("category", category);
         return "post/board";
     }
@@ -135,5 +136,21 @@ public class PostController {
 
         String referer = request.getHeader("Referer");
         return "redirect:"+referer;
+    }
+
+    @PostMapping("/search/{categoryId}")
+    public String searchPost(HttpServletRequest request,
+                             @PageableDefault Pageable pageable,
+                             @PathVariable("categoryId") Long categoryId,
+                             Model model) {
+        String search = request.getParameter("search");
+        Page<Post> result = postService.findByTitle(search, pageable);
+
+        Category category = categoryService.findOne(categoryId);
+
+        model.addAttribute("boardList", result);
+        model.addAttribute("category", category);
+
+        return "post/board";
     }
 }

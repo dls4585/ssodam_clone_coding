@@ -36,7 +36,7 @@ public class    HomeController {
 
     @GetMapping("/signup")
     public String signup() {
-        return "signup";
+        return "login/signup";
     }
 
     @PostMapping("/signup")
@@ -47,7 +47,7 @@ public class    HomeController {
 
     @GetMapping("/login")
     public String login() {
-        return "login";
+        return "login/loginModal";
     }
 
     @PostMapping("/login")
