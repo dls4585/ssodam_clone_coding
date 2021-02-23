@@ -8,6 +8,11 @@
 <td th:text="'member: '+${post.getMember().getUsername()}"></td>
 <td th:text="'content: '+${post.getContents()}"></td>
 <br><br>
+<div id="like_dislike_scrap area">
+    <button id="like_button" class="btn-primary"><a th:href="@{/content/like/{post_id}(post_id=${post.id})}">좋아요</a></button>
+    <button id="dislike_button" class="btn-primary"><a th:href="@{/content/dislike/{post_id}(post_id=${post.id})}">좋아요</a></button>
+    <button id="scrap_button" class="btn-primary"><a th:href="@{/content/scrap/{post_id}(post_id=${post.id})}">좋아요</a></button>
+</div>
 
 <div id="comment_area">
     <div class="comment" th:id="'comment_'+${comment.id}" th:each="comment,commentStat: ${post.getComments()}">
