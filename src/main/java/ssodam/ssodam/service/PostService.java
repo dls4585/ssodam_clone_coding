@@ -1,6 +1,7 @@
 package ssodam.ssodam.service;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.parameters.P;
 import ssodam.ssodam.domain.Category;
@@ -24,4 +25,5 @@ public interface PostService {
 
     // 새로 추가
     public Page<Post> findByTitle(String search, Pageable pageable);
+    public Page<Post> findByTitleInCategory(String search, Category category, Pageable pageable);
 }

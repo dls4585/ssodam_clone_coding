@@ -20,5 +20,5 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 
     //새로 추가
     Page<Post> findByTitleContaining(String title, Pageable pageable);
-
+    Page<Post> findByTitleContainingAndCategory(String title, Category category, Pageable pageable);
 }

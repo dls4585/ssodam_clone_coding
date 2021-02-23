@@ -68,7 +68,10 @@ public class PostController {
     public String writePost(@PathVariable("categoryId") Long categoryId, @AuthenticationPrincipal Member currentMember, PostForm postForm){
         Category category = categoryService.findOne(categoryId);
         postForm.setCategory(category);
-        postForm.setMember(currentMember);
+
+        // 추가 변경
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        postForm.setMember(optionalMember.get());
         postService.post(postForm);
 
         return "redirect:/board/{categoryId}";
@@ -144,10 +147,15 @@ public class PostController {
                              @PathVariable("categoryId") Long categoryId,
                              Model model) {
         String search = request.getParameter("search");
-        Page<Post> result = postService.findByTitle(search, pageable);
-
         Category category = categoryService.findOne(categoryId);
 
+        Page<Post> result;
+        if(categoryId == 0L) {
+            result = postService.findByTitle(search, pageable);
+        }
+        else {
+            result = postService.findByTitleInCategory(search, category, pageable);
+        }
         model.addAttribute("boardList", result);
         model.addAttribute("category", category);
 

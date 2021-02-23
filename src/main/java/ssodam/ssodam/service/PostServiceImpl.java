@@ -100,4 +100,13 @@ public class PostServiceImpl implements PostService{
         pageable = PageRequest.of(page, 10, Sort.by("id").descending());
         return postRepository.findByTitleContaining(search, pageable);
     }
+
+    @Override
+    public Page<Post> findByTitleInCategory(String search, Category category, Pageable pageable) {
+        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber()-1);
+        pageable = PageRequest.of(page, 10, Sort.by("id").descending());
+        return postRepository.findByTitleContainingAndCategory(search, category, pageable);
+    }
+
+
 }
