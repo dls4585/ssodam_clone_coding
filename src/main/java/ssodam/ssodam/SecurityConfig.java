@@ -40,25 +40,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-            .authorizeRequests()
-            .antMatchers("/admin").hasRole("ADMIN")
-            .antMatchers("/me").hasAnyRole( "USER")
-            .antMatchers("/signup", "/home").permitAll()
-            .anyRequest().authenticated();
+                .authorizeRequests()
+                .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/me").hasAnyRole("USER")
+                .antMatchers("/signup", "/home",
+                        "/findPassword", "/findPasswordFail","/findPasswordSuccess","/wrongEmail","/wrongName","/changePassword").permitAll()
+                .anyRequest().authenticated();
         http
-            .formLogin()
-            .loginPage("/login")
-            .loginProcessingUrl("/login")
-            .defaultSuccessUrl("/login/result")
-            .failureUrl("/fail")
-            .permitAll();
+                .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/login/result")
+                .failureUrl("/fail")
+                .permitAll();
         http
-            .logout()
-            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-            .logoutSuccessUrl("/logout/result")
-            .invalidateHttpSession(true)
-        .and()
-            .exceptionHandling().accessDeniedPage("/denied");
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/logout/result")
+                .invalidateHttpSession(true)
+                .and()
+                .exceptionHandling().accessDeniedPage("/denied");
     }
 
     @Bean

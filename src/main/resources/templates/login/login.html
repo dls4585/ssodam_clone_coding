@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
 <body>
-
+<div th:replace="fragments/nav :: fragment-nav"></div>
+<p>로그인이 필요합니다.</p>
+<button data-toggle="modal" data-target="#loginModal">로그인</button>
 </body>
 </html>
