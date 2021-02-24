@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+    <div th:fragment="loginModal" class="modal fade" id="loginModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/login" method="post">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <input class="form-control-lg col-sm-12 mb-5" type="text" id="username" name="username" placeholder="ID">
+                        <input class="form-control-lg col-sm-12" type="password" id="password" name="password" placeholder="PASSWORD">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button submit mb-5" class="btn btn-danger btn-block">로그인</button>
+                        <button type="button" class="btn btn-danger btn-block" th:href="@{/findPassword}">
+                            <a href="/findPassword">비밀번호 찾기</a></button>
+                        <button type="button" class="btn btn-primary btn-block" th:href="@{/signup}">회원가입</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

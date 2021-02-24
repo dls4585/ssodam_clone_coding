@@ -1,13 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <link th:href="@{/css/index.css}" rel="stylesheet" type="text/css">
-    <title>ssodam clone</title>
-</head>
+<head th:replace="fragments/header :: header" />
 <body>
-<h1>SSODAM</h1>
-
+<div th:replace="fragments/nav :: fragment-nav"></div>
 
 <td th:text="'title: '+${post.getTitle()}"></td>
 <td th:text="'member: '+${post.getMember().getUsername()}"></td>

@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header" />
+<head th:replace="fragments/header :: header"></head>
 <body>
 <h1>회원 가입</h1>
 <hr>
 
 <form th:action="@{/signup}" method="post">
+    <div class="form-group">
+        <label>e-mail: </label>
+        <input type="email" name="email" id="email" placeholder="email"/>
+    </div>
     <div class="form-group">
         <label>닉네임: </label>
         <input type="text" name="username" id="name" placeholder="아이디"/>

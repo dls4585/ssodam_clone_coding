@@ -27,42 +27,47 @@ public class PostController {
     private final CategoryService categoryService;
     private final CommentService commentService;
 
+
     @GetMapping("content/{postId}")
-    public String board(@PathVariable("postId") Long postId,
+    public String postView(@PathVariable("postId") Long postId,
                         @RequestParam("prev") Long prev,
                         @RequestParam("prev_content") String prev_content,
                         Model model){
 
         Post post = postService.findOne(postId);
+        postService.increaseVisit(post);
+      
         Long categoryId = Long.parseLong(prev_content.substring(7));
 
         model.addAttribute("post", post);
         model.addAttribute("commentForm", new CommentForm());
         model.addAttribute("prev_content", categoryId);
         model.addAttribute("prev", prev);
-        return "content";
+      
+        return "post/content";
     }
 
     @GetMapping("/board/{categoryId}")
-    public String postView(@PathVariable("categoryId") Long categoryId, @PageableDefault Pageable pageable, Model model) {
+    public String board(@PathVariable("categoryId") Long categoryId, @PageableDefault Pageable pageable, Model model) {
         Category category = categoryService.findOne(categoryId);
         Page<Post> boardList = postService.getPostListByCategory(category, pageable);
         model.addAttribute("boardList", boardList);
-        model.addAttribute("categoryName", categoryId);
-        return "board";
+        model.addAttribute("category", category);
+        return "post/board";
     }
 
     @GetMapping("/write/{categoryId}")
     public String post(@PathVariable("categoryId") Long categoryId, Model model) {
         Category category = categoryService.findOne(categoryId);
         model.addAttribute("categoryName", categoryId);
-        return "write";
+        return "post/write";
     }
 
     @PostMapping("/write/{categoryId}")
-    public String writePost(@PathVariable("categoryId") Long categoryId, PostForm postForm){
+    public String writePost(@PathVariable("categoryId") Long categoryId, @AuthenticationPrincipal Member currentMember, PostForm postForm){
         Category category = categoryService.findOne(categoryId);
         postForm.setCategory(category);
+        postForm.setMember(currentMember);
         postService.post(postForm);
 
         return "redirect:/board/{categoryId}";
