@@ -5,23 +5,64 @@
 <div th:replace="fragments/nav :: fragment-nav"></div>
 
 <th:block th:insert="fragments/mypage-body :: mypage-body"/>
-<div class="container">
-    <table class="table table-striped">
+<div class="container d-flex mt-5">
+
+    <div th:replace="fragments/sidebar :: fragment-sidebar"></div>
+
+    <table class="box shadow table">
         <thead>
         <tr>
-             <th>#</th>
-             <th>제목</th>
-             <th>날짜</th>
+            <td class="h4" colspan="6">내가 쓴 댓글</td>
+        </tr>
+        <tr>
+            <th>#</th>
+            <th>제목</th>
+            <th>날짜</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="comment : ${comments}">
             <td th:text="${comment.id}"></td>
-            <td th:href="@{/comment/{id} (id=${comment.id})"  th:text="${comment.content}"></td>
-            <td th:text="${comment.createTime}"></td>
+            <td><a th:href="@{/content/{postId}(postId=${comment.post.id},prev=1,prev_content='/board/'+${comment.post.category.id})}" th:text="${comment.content}"></a></td>
+            <td th:text="${#temporals.format(comment.createTime, 'HH:mm')}"></td>
         </tr>
         </tbody>
     </table>
+</div>
+<div class = "container">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center"
+            th:with="start=${T(Math).floor(comments.number/10)*10 + 1},
+                            last=(${start + 9 < comments.totalPages ? start + 9 : comments.totalPages})">
+            <li class="page-item">
+                <a th:href="@{/board/(page=1)}" aria-label="First">
+                    <span aria-hidden="true">First</span>
+                </a>
+            </li>
+
+            <li class="page-item" th:class="${comments.first} ? 'disabled'">
+                <a th:href="${comments.first} ? '#' :@{/comments/(page=${comments.number})}" aria-label="Previous">
+                    <span aria-hidden="true">&lt;</span>
+                </a>
+            </li>
+
+            <li class="page-item" th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == comments.number + 1} ? 'active'">
+                <a th:text="${page}" th:href="@{/comments/(page=${page})}"></a>
+            </li>
+
+            <li class="page-item" th:class="${comments.last} ? 'disabled'">
+                <a th:href="${comments.last} ? '#' : @{/comments/(page=${comments.number + 2})}" aria-label="Next">
+                    <span aria-hidden="true">&gt;</span>
+                </a>
+            </li>
+
+            <li class="page-item">
+                <a th:href="@{/comments/(page=${comments.totalPages})}" aria-label="Last">
+                    <span aria-hidden="true">Last</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 </body>
 </html>

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ssodam.ssodam.domain.*;
+import ssodam.ssodam.repository.LikeRepository;
 import ssodam.ssodam.service.CategoryService;
 import ssodam.ssodam.service.CommentService;
 import ssodam.ssodam.service.MemberService;
@@ -27,19 +28,26 @@ public class PostController {
     private final PostService postService;
     private final CategoryService categoryService;
     private final CommentService commentService;
+    private final LikeRepository likeRepository;
 
 
     @GetMapping("content/{postId}")
     public String postView(@PathVariable("postId") Long postId,
                         @RequestParam("prev") Long prev,
                         @RequestParam("prev_content") String prev_content,
+                        @AuthenticationPrincipal Member currentMember,
                         Model model){
 
         Post post = postService.findOne(postId);
         postService.increaseVisit(post);
-      
-        Long categoryId = Long.parseLong(prev_content.substring(7));
 
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+
+        Long categoryId = Long.parseLong(prev_content.substring(7));
+        Optional<Like> optionalLike = likeRepository.findByMemberIdAndPostId(member.getId(), postId);
+
+        model.addAttribute("like", optionalLike.get());
         model.addAttribute("post", post);
         model.addAttribute("commentForm", new CommentForm());
         model.addAttribute("prev_content", categoryId);
@@ -151,14 +159,57 @@ public class PostController {
 
         Page<Post> result;
         if(categoryId == 0L) {
-            result = postService.findByTitle(search, pageable);
+            result = postService.getPostListByTitle(search, pageable);
         }
         else {
-            result = postService.findByTitleInCategory(search, category, pageable);
+            result = postService.getPostListByTitleInCategory(search, category, pageable);
         }
         model.addAttribute("boardList", result);
         model.addAttribute("category", category);
 
         return "post/board";
+    }
+
+    @GetMapping("/content/like/{post_id}")
+    public String likePost(@PathVariable("post_id") Long postId,
+                           @AuthenticationPrincipal Member currentMember,
+                           HttpServletRequest request) {
+        Post post = postService.findOne(postId);
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+        postService.increaseLike(post, member);
+
+        String referer = request.getHeader("Referer");
+
+        return "redirect:" +referer;
+    }
+
+    @GetMapping("/content/dislike/{post_id}")
+    public String dislikePost(@PathVariable("post_id") Long postId,
+                              @AuthenticationPrincipal Member currentMember,
+                              HttpServletRequest request) {
+        Post post = postService.findOne(postId);
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+        postService.decreaseLike(post, member);
+
+        String referer = request.getHeader("Referer");
+
+        return "redirect:" +referer;
+    }
+
+    @GetMapping("/content/scrap/{post_id}")
+    public String scrapPost(@PathVariable("post_id") Long postId,
+                            @AuthenticationPrincipal Member currentMember,
+                            HttpServletRequest request) {
+        Post post = postService.findOne(postId);
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+
+        postService.scrapPost(post, member);
+
+        String referer = request.getHeader("Referer");
+
+        return "redirect:"+referer;
     }
 }

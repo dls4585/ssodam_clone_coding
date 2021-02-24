@@ -1,5 +1,7 @@
 package ssodam.ssodam.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ssodam.ssodam.domain.Comment;
 import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
@@ -46,4 +48,6 @@ public interface CommentService {
      * 포스트의 댓글 찾기
      */
     List<Comment> findByPost(Post post);
+
+    Page<Comment> findListByMember(Member member, Pageable pageable);
 }

@@ -6,10 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -37,6 +34,9 @@ public class Member implements UserDetails {
     private List<Comment> comments = new ArrayList<>();
 
     //private String email;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private Set<Scrap> scraps = new HashSet<>();
 
     @Transient
     private Collection<? extends GrantedAuthority> authorities;

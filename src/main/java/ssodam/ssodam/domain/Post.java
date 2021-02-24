@@ -8,7 +8,9 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter @Setter
@@ -31,6 +33,9 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private Set<Scrap> scrappedBy = new HashSet<>();
+
     @Column(nullable = false)
     private String title;
 
@@ -40,10 +45,6 @@ public class Post {
 
     @ColumnDefault("0")
     private int likes;
-    @ColumnDefault("0")
-    private int dislikes;
-    @ColumnDefault("0")
-    private int scrap;
     @ColumnDefault("0")
     private int visit;
 

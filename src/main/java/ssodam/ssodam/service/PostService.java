@@ -24,6 +24,12 @@ public interface PostService {
     public void increaseVisit(Post post);
 
     // 새로 추가
-    public Page<Post> findByTitle(String search, Pageable pageable);
-    public Page<Post> findByTitleInCategory(String search, Category category, Pageable pageable);
+    public Page<Post> getPostListByTitle(String search, Pageable pageable);
+    public Page<Post> getPostListByTitleInCategory(String search, Category category, Pageable pageable);
+
+    public Page<Post> getPostListByMember(Member member, Pageable pageable);
+
+    public void increaseLike(Post post, Member member);
+    public void decreaseLike(Post post, Member member);
+    public void scrapPost(Post post, Member member);
 }
