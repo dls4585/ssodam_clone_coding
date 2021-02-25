@@ -17,6 +17,7 @@ import ssodam.ssodam.service.PostService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
@@ -48,6 +49,10 @@ public class PostController {
         Likes likes;
         likes = optionalLike.orElse(null);
 
+        Set<Scrap> scraps = member.getScraps();
+        boolean scrapCheck = scraps.stream().anyMatch(a -> a.getPost().getId() == postId && a.getMember().getId() == member.getId());
+
+        model.addAttribute("scrapCheck", scrapCheck);
         model.addAttribute("like", likes);
         model.addAttribute("post", post);
         model.addAttribute("commentForm", new CommentForm());
@@ -212,5 +217,20 @@ public class PostController {
         String referer = request.getHeader("Referer");
 
         return "redirect:"+referer;
+    }
+
+    @GetMapping("/content/scrap/cancel/{post_id}")
+    public String scrapCancel(@PathVariable("post_id") Long postId,
+                              @AuthenticationPrincipal Member currentMember,
+                              HttpServletRequest request) {
+        Post post = postService.findOne(postId);
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+
+        postService.scrapCancel(post, member);
+
+        String referer = request.getHeader("Referer");
+
+        return "redirect:" + referer;
     }
 }

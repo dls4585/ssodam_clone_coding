@@ -8,10 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ssodam.ssodam.domain.*;
-import ssodam.ssodam.repository.CategoryRepository;
-import ssodam.ssodam.repository.LikeRepository;
-import ssodam.ssodam.repository.MemberRepository;
-import ssodam.ssodam.repository.PostRepository;
+import ssodam.ssodam.repository.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,9 +21,9 @@ import java.util.Optional;
 public class PostServiceImpl implements PostService{
 
     private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
     private final LikeRepository likeRepository;
+    private final ScrapRepository scrapRepository;
 
     @Override
     @Transactional
@@ -166,6 +163,18 @@ public class PostServiceImpl implements PostService{
 
         post.getScrappedBy().add(scrap);
         member.getScraps().add(scrap);
+    }
+
+    @Override
+    @Transactional
+    public void scrapCancel(Post post, Member member) {
+        System.out.println("post.getScrappedBy() = " + post.getScrappedBy());
+        post.getScrappedBy().removeIf(m -> m.getMember().equals(member));
+        System.out.println("post.getScrappedBy() = " + post.getScrappedBy());
+        System.out.println("member.getScraps() = " + member.getScraps());
+        member.getScraps().removeIf(p -> p.getPost().equals(post));
+        System.out.println("member.getScraps() = " + member.getScraps());
+        scrapRepository.deleteByPostAndMember(post, member);
     }
 
 }

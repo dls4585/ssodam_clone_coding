@@ -10,22 +10,27 @@
 <br><br>
 <div id="like_dislike_scrap area">
     <span th:if="${like == null}">
-        <button th:method="post" id="null_like_button" class="btn-primary"><a th:href="@{/content/like/{post_id}(post_id=${post.id})}" style="color:#ffffff">좋아요</a></button>
-        <button th:method="post" id="null_dislike_button" class="btn-primary"><a th:href="@{/content/dislike/{post_id}(post_id=${post.id})}" style="color:white">싫어요</a></button>
+        <button id="null_like_button" class="btn-primary"><a th:href="@{/content/like/{post_id}(post_id=${post.id})}" style="color:#ffffff">좋아요</a></button>
+        <button id="null_dislike_button" class="btn-primary"><a th:href="@{/content/dislike/{post_id}(post_id=${post.id})}" style="color:white">싫어요</a></button>
     </span>
     <span th:unless="${like == null}">
         <span th:if="${like.status == T(ssodam.ssodam.domain.LikeStatus).LIKE}">
 <!--            Like 일때-->
             <button class="btn-danger" style="color:white">좋아요</button>
-            <button th:method="post" id="dislike_button" class="btn-primary"><a th:href="@{/content/dislike/{post_id}(post_id=${post.id})}" style="color:white">싫어요</a></button>
+            <button id="dislike_button" class="btn-primary"><a th:href="@{/content/dislike/{post_id}(post_id=${post.id})}" style="color:white">싫어요</a></button>
         </span>
         <span th:if="${like.status == T(ssodam.ssodam.domain.LikeStatus).DISLIKE}">
 <!--            DISLIKE일 때-->
-            <button th:method="post" id="like_button" class="btn-primary"><a th:href="@{/content/like/{post_id}(post_id=${post.id})}" style="color:#ffffff">좋아요</a></button>
+            <button id="like_button" class="btn-primary"><a th:href="@{/content/like/{post_id}(post_id=${post.id})}" style="color:#ffffff">좋아요</a></button>
             <button class="btn-danger" style="color:white">싫어요</button>
         </span>
     </span>
-    <button th:method="post" id="scrap_button" class="btn-primary"><a th:href="@{/content/scrap/{post_id}(post_id=${post.id})}" style="color:white">스크랩</a></button>
+    <span th:if="${scrapCheck == true}">
+        <button id="scrap_cancel" class="btn-primary"><a th:href="@{/content/scrap/cancel/{post_id} (post_id=${post.id})}" style="color:white">스크랩 취소</a></button>
+    </span>
+    <span th:if="${scrapCheck == false}">
+        <button id="scrap_button" class="btn-primary"><a th:href="@{/content/scrap/{post_id}(post_id=${post.id})}" style="color:white">스크랩</a></button>
+    </span>
 </div>
 
 <div id="comment_area">
