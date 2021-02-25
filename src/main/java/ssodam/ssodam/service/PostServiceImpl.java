@@ -121,9 +121,9 @@ public class PostServiceImpl implements PostService{
         int likes = post.getLikes();
         post.setLikes(likes+1);
 
-        Optional<Like> optional = likeRepository.findByMemberIdAndPostId(member.getId(), post.getId());
+        Optional<Likes> optional = likeRepository.findByMemberIdAndPostId(member.getId(), post.getId());
         if(optional.isPresent()) {
-            Like like = optional.get();
+            Likes like = optional.get();
             if(like.getStatus() == LikeStatus.DISLIKE) {
                 like.setStatus(LikeStatus.LIKE);
             }
@@ -131,7 +131,7 @@ public class PostServiceImpl implements PostService{
                 return;
             }
         } else {
-            Like like = Like.createLike(member.getId(), post.getId(), LikeStatus.LIKE);
+            Likes like = Likes.createLike(member.getId(), post.getId(), LikeStatus.LIKE);
             likeRepository.save(like);
         }
 
@@ -144,9 +144,9 @@ public class PostServiceImpl implements PostService{
         int likes = post.getLikes();
         post.setLikes(likes-1);
 
-        Optional<Like> optional = likeRepository.findByMemberIdAndPostId(member.getId(), post.getId());
+        Optional<Likes> optional = likeRepository.findByMemberIdAndPostId(member.getId(), post.getId());
         if(optional.isPresent()) {
-            Like like = optional.get();
+            Likes like = optional.get();
             if(like.getStatus() == LikeStatus.LIKE) {
                 like.setStatus(LikeStatus.DISLIKE);
             }
@@ -154,7 +154,7 @@ public class PostServiceImpl implements PostService{
                 return;
             }
         } else {
-            Like like = Like.createLike(member.getId(), post.getId(), LikeStatus.DISLIKE);
+            Likes like = Likes.createLike(member.getId(), post.getId(), LikeStatus.DISLIKE);
             likeRepository.save(like);
         }
     }

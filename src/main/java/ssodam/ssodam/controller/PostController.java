@@ -16,7 +16,6 @@ import ssodam.ssodam.service.MemberService;
 import ssodam.ssodam.service.PostService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -45,9 +44,11 @@ public class PostController {
         Member member = optionalMember.get();
 
         Long categoryId = Long.parseLong(prev_content.substring(7));
-        Optional<Like> optionalLike = likeRepository.findByMemberIdAndPostId(member.getId(), postId);
+        Optional<Likes> optionalLike = likeRepository.findByMemberIdAndPostId(member.getId(), postId);
+        Likes likes;
+        likes = optionalLike.orElse(null);
 
-        model.addAttribute("like", optionalLike.get());
+        model.addAttribute("like", likes);
         model.addAttribute("post", post);
         model.addAttribute("commentForm", new CommentForm());
         model.addAttribute("prev_content", categoryId);
