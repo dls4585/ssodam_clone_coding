@@ -32,6 +32,7 @@ public class MyPageController {
         List<Category> categoryList = categoryService.findAll();
         model.addAttribute("categoryList", categoryList);
         memberForm.setName(currentMember.getUsername());
+        memberForm.setEmail(currentMember.getEmail());
         model.addAttribute("memberForm", memberForm);
         return "mypage/me";
     }
@@ -103,5 +104,42 @@ public class MyPageController {
         model.addAttribute("categoryList", categoryList);
         model.addAttribute("comments", comments);
         return "mypage/comments";
+    }
+
+    @GetMapping("/deleteMember")
+    public String delMember(Model model, String checkWords){
+        model.addAttribute("passwordForm", new PasswordForm());
+        model.addAttribute("checkWords", checkWords);
+
+        return "mypage/deleteMember";
+    }
+
+    @PostMapping("/deleteMember")
+    public String delMember(PasswordForm form,
+                            String checkWords,
+                            @AuthenticationPrincipal Member currentMember){
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        if (!encoder.matches(form.getPassword(), currentMember.getPassword())) {
+            System.out.println("비밀번호 불일치");
+            return "redirect:/deleteMember";
+        }
+        else{
+            System.out.println("비밀번호 일치");
+        }
+
+        if(!checkWords.equals("Delete Member")){
+            System.out.println("문장 불일치");
+            return "redirect:/deleteMember";
+        }
+        else{
+            System.out.println("문장 일치");
+        }
+
+        Member member = memberService.findByUsername(currentMember.getUsername()).get();
+        memberService.deleteMember(member.getUsername());
+
+        return "redirect:/logout";
     }
 }

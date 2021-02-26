@@ -40,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
         else{
             authorities.add(new SimpleGrantedAuthority(MemberRole.USER.getValue()));
         }
-        return new Member(username, memberEntity.getPassword(), authorities);
+        return new Member(username, memberEntity.getPassword(), memberEntity.getEmail(), authorities);
     }
 
     @Transactional
@@ -53,8 +53,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public Long updatePassword(String username, String newPassword) {
-        return null;
+        Optional<Member> optionalMember = memberRepository.findByUsername(username);
+        Member member = optionalMember.get();
+        member.setPassword(newPassword);
+        return member.getId();
     }
 
     @Transactional
@@ -67,7 +71,15 @@ public class MemberServiceImpl implements MemberService {
                         .username(form.getUsername())
                         .password(form.getPassword())
                         .createDate(LocalDateTime.now())
+                        .email(form.getEmail())
                         .build()).getId();
+    }
+
+    @Override
+    @Transactional
+    public void deleteMember(String username) {
+        Member member = memberRepository.findByUsername(username).get();
+        memberRepository.delete(member);
     }
 
     @Override
@@ -77,6 +89,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<Member> findAll() { return memberRepository.findAll(); }
-
+    
+    @Override
+    public Optional<Member> findByEmail(String email){ return memberRepository.findByEmail(email);}
 }
 

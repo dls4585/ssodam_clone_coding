@@ -1,11 +1,14 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header" />
+<head th:replace="fragments/header :: header"></head>
 <body>
     <div th:replace="fragments/nav :: fragment-nav"></div>
 
 <form th:action="@{/signup}" method="post">
+    <div class="form-group">
+        <label>e-mail: </label>
+        <input type="email" name="email" id="email" placeholder="email"/>
+    </div>
     <div class="form-group">
         <label>닉네임: </label>
         <input type="text" name="username" id="name" placeholder="아이디"/>

@@ -12,7 +12,9 @@ public interface MemberService extends UserDetailsService {
     Long updateName(String username, String newName);
     Long updatePassword(String username, String newPassword);
     Long createMember(MemberForm form);
+    void deleteMember(String username);
     Optional<Member> findByUsername(String username);
     List<Member> findAll();
+    Optional<Member> findByEmail(String email);
 }
 
