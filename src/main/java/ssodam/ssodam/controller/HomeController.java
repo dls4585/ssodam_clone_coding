@@ -41,8 +41,18 @@ public class    HomeController {
 
     @PostMapping("/signup")
     public String execSignup(MemberForm memberForm){
-        memberService.createMember(memberForm);
-        return "redirect:/login";
+        if(memberService.findByEmail(memberForm.getEmail()).isPresent()){
+            System.out.println("이미 존재하는 이메일");
+            return "login/duplicate";
+        }
+        else if(memberService.findByUsername(memberForm.getUsername()).isPresent()){
+            System.out.println("이미 존재하는 아이디");
+            return "login/duplicate";
+        }
+        else {
+            memberService.createMember(memberForm);
+            return "redirect:/login";
+        }
     }
 
     @GetMapping("/login")
@@ -65,6 +75,7 @@ public class    HomeController {
     public String logoutResult() {
         return "redirect:/home";
     }
+
 
     @GetMapping("/fail")
     @ResponseBody
