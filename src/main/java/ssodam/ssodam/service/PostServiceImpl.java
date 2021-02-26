@@ -168,13 +168,8 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public void scrapCancel(Post post, Member member) {
-        System.out.println("post.getScrappedBy() = " + post.getScrappedBy());
         post.getScrappedBy().removeIf(m -> m.getMember().equals(member));
-        System.out.println("post.getScrappedBy() = " + post.getScrappedBy());
-        System.out.println("member.getScraps() = " + member.getScraps());
         member.getScraps().removeIf(p -> p.getPost().equals(post));
-        System.out.println("member.getScraps() = " + member.getScraps());
         scrapRepository.deleteByPostAndMember(post, member);
     }
-
 }

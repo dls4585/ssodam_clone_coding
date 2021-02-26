@@ -45,12 +45,13 @@ public class PostController {
         Member member = optionalMember.get();
 
         Long categoryId = Long.parseLong(prev_content.substring(7));
+
         Optional<Likes> optionalLike = likeRepository.findByMemberIdAndPostId(member.getId(), postId);
         Likes likes;
         likes = optionalLike.orElse(null);
 
         Set<Scrap> scraps = member.getScraps();
-        boolean scrapCheck = scraps.stream().anyMatch(a -> a.getPost().getId() == postId && a.getMember().getId() == member.getId());
+        boolean scrapCheck = scraps.stream().anyMatch(a -> a.getPost().getId().equals(postId) && a.getMember().getId().equals(member.getId()));
 
         model.addAttribute("scrapCheck", scrapCheck);
         model.addAttribute("like", likes);
