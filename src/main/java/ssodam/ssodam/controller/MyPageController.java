@@ -10,11 +10,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ssodam.ssodam.domain.Category;
 import ssodam.ssodam.domain.Comment;
 import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.domain.Scrap;
 import ssodam.ssodam.repository.CommentRepository;
+import ssodam.ssodam.service.CategoryService;
 import ssodam.ssodam.service.CommentService;
 import ssodam.ssodam.service.MemberService;
 import ssodam.ssodam.service.PostService;
@@ -31,10 +33,13 @@ public class MyPageController {
     private final MemberService memberService;
     private final PostService postService;
     private final CommentService commentService;
+    private final CategoryService categoryService;
 
     @GetMapping("/me")
     public String myPageHome(Model model, @AuthenticationPrincipal Member currentMember) {
         MemberForm memberForm = new MemberForm();
+        List<Category> categoryList = categoryService.findAll();
+        model.addAttribute("categoryList", categoryList);
         memberForm.setName(currentMember.getUsername());
         memberForm.setEmail(currentMember.getEmail());
         model.addAttribute("memberForm", memberForm);
@@ -54,6 +59,8 @@ public class MyPageController {
 
     @GetMapping("/password")
     public String passwordView(Model model) {
+        List<Category> categoryList = categoryService.findAll();
+        model.addAttribute("categoryList", categoryList);
         model.addAttribute("passwordForm", new PasswordForm());
         return "mypage/password";
     }
@@ -96,6 +103,10 @@ public class MyPageController {
         Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
         Member member = optionalMember.get();
         Page<Post> posts = postService.getPostListByMember(member, pageable);
+  
+        List<Category> categoryList = categoryService.findAll();
+  
+        model.addAttribute("categoryList", categoryList);
         model.addAttribute("posts", posts);
         return "mypage/contents";
     }
@@ -106,6 +117,10 @@ public class MyPageController {
         Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
         Member member = optionalMember.get();
         Page<Comment> comments = commentService.findListByMember(member, pageable);
+
+        List<Category> categoryList = categoryService.findAll();
+  
+        model.addAttribute("categoryList", categoryList);
         model.addAttribute("comments", comments);
         return "mypage/comments";
     }
@@ -130,7 +145,7 @@ public class MyPageController {
         model.addAttribute("posts", posts);
 
         return "mypage/scrap";
-        
+
     @GetMapping("/deleteMember")
     public String delMember(Model model, String checkWords){
         model.addAttribute("passwordForm", new PasswordForm());

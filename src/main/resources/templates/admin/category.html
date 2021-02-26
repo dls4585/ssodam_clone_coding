@@ -1,0 +1,42 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+    <div th:replace="fragments/nav :: fragment-nav"></div>
+    <div class="container d-flex mt-5">
+
+        <div th:replace="fragments/admin-sidebar :: fragment-admin-sidebar"></div>
+
+        <table class="box shadow table">
+            <thead>
+            <tr>
+                <td class="h4" colspan="6" th:text="${categoryClass}"></td>
+            </tr>
+
+            <tr>
+                <th style="width: 10%">번호</th>
+                <th style="width: 10%">이름</th>
+                <th style="width: 10%">구분</th>
+                <th style="width: 10%"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="category: ${categoryList}" th:if="${category.categoryClass == categoryClass}">
+                <td style="width: 10%" th:text="${category.id}"></td>
+                <td style="width: 10%" th:text="${category.name}">익명</td>
+                <td style="width: 10%" th:text="${category.categoryClass}"></td>
+                <button class="btn btn-primary">삭제</button>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <a class="btn btn-primary float-right" role="button" th:href="@{/admin/category/create}">생성</a>
+    </div>
+
+
+
+
+</body>
+
+</html>
