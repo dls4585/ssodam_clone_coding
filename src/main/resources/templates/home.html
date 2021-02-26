@@ -21,7 +21,7 @@
                 </tr>
                 <tr th:each="post:${postList}">
                     <td th:text="${post.id}"></td>
-                    <td align="left">
+                    <td align="left">onclick
                         <a th:href="@{/content/{postId}(postId=${post.id},prev=1,prev_content='/board/'+${post.category.id})}" th:text="${post.getTitle()}"></a>
                     </td>
                     <td align="left">

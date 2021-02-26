@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
 <body>
-
+    <div class="mb-5"></div>
+    <div class="row justify-content-center">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#loginModal"}>로그인</button>
+        <th:block th:replace="login/loginModal :: loginModal"></th:block>
+    </div>
 </body>
 </html>

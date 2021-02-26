@@ -15,6 +15,7 @@ import ssodam.ssodam.service.MemberService;
 import ssodam.ssodam.service.PostService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -39,6 +40,8 @@ public class PostController {
       
         Long categoryId = Long.parseLong(prev_content.substring(7));
 
+        List<Category> categoryList = categoryService.findAll();
+        model.addAttribute("categoryList", categoryList);
         model.addAttribute("post", post);
         model.addAttribute("commentForm", new CommentForm());
         model.addAttribute("prev_content", categoryId);
@@ -50,6 +53,8 @@ public class PostController {
     @GetMapping("/board/{categoryId}")
     public String board(@PathVariable("categoryId") Long categoryId, @PageableDefault Pageable pageable, Model model) {
         Category category = categoryService.findOne(categoryId);
+        List<Category> categoryList = categoryService.findAll();
+        model.addAttribute("categoryList", categoryList);
         Page<Post> boardList = postService.getPostListByCategory(category, pageable);
         model.addAttribute("boardList", boardList);
         model.addAttribute("category", category);
@@ -58,6 +63,8 @@ public class PostController {
 
     @GetMapping("/write/{categoryId}")
     public String post(@PathVariable("categoryId") Long categoryId, Model model) {
+        List<Category> categoryList = categoryService.findAll();
+        model.addAttribute("categoryList", categoryList);
         Category category = categoryService.findOne(categoryId);
         model.addAttribute("categoryName", categoryId);
         return "post/write";

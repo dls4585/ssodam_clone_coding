@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ssodam.ssodam.domain.Category;
 import ssodam.ssodam.domain.MemberForm;
 import ssodam.ssodam.repository.CategoryRepository;
+import ssodam.ssodam.service.CategoryService;
 import ssodam.ssodam.service.MemberService;
 import ssodam.ssodam.service.PostService;
 
@@ -19,7 +20,7 @@ import java.util.List;
 public class    HomeController {
     final private MemberService memberService;
     final private PostService postService;
-    final private CategoryRepository categoryRepository;
+    final private CategoryService categoryService;
 
     @GetMapping("/")
     public String index() {
@@ -28,15 +29,17 @@ public class    HomeController {
 
     @GetMapping("/home")
     public String home(Model model) throws Exception{
-        List<Category> categoryList = categoryRepository.findAll();
+        List<Category> categoryList = categoryService.findAll();
         model.addAttribute("categoryList", categoryList);
         model.addAttribute("postService", postService);
         return "home";
     }
 
     @GetMapping("/signup")
-    public String signup() {
-        return "signup";
+    public String signup(Model model) {
+        List<Category> categoryList = categoryService.findAll();
+        model.addAttribute("categoryList", categoryList);
+        return "login/signup";
     }
 
     @PostMapping("/signup")
@@ -47,7 +50,7 @@ public class    HomeController {
 
     @GetMapping("/login")
     public String login() {
-        return "login";
+        return "login/login";
     }
 
     @PostMapping("/login")
@@ -81,6 +84,6 @@ public class    HomeController {
     // 어드민 페이지
     @GetMapping("admin")
     public String admin() {
-        return "admin";
+        return "admin/admin";
     }
 }

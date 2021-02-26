@@ -4,6 +4,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.MemberForm;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -12,5 +13,6 @@ public interface MemberService extends UserDetailsService {
     Long updatePassword(String username, String newPassword);
     Long createMember(MemberForm form);
     Optional<Member> findByUsername(String username);
+    List<Member> findAll();
 }
 
