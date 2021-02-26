@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div th:replace="fragments/nav :: fragment-nav"></div>
+<div class="container box shadow mt-5 col-lg-offset-1">
+    <form th:action = "@{/admin/category/create}" method = "post">
+
+        <div class="input-group mb-5">
+            <div class="form-group">
+                <label id="categoryClass">카테고리</label>
+                <select class="form-control" name="categoryClass">
+                    <option>커뮤니티</option>
+                    <option>새내기</option>
+                    <option>커리어</option>
+                    <option>생활</option>
+                    <option>족보실</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="input-group mb-5">
+            <input type="text" class="form-control" name="name" placeholder="이름을 입력하세요">
+        </div>
+
+
+        <div class="mb-2">
+            <button class="submit btn btn-primary btn-block">생성</button>
+        </div>
+
+    </form>
+</div>
+</body>
+
+</html>

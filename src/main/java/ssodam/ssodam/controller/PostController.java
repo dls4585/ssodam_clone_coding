@@ -16,6 +16,7 @@ import ssodam.ssodam.service.MemberService;
 import ssodam.ssodam.service.PostService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -46,15 +47,18 @@ public class PostController {
 
         Long categoryId = Long.parseLong(prev_content.substring(7));
 
+        List<Category> categoryList = categoryService.findAll();
+
         Optional<Likes> optionalLike = likeRepository.findByMemberIdAndPostId(member.getId(), postId);
         Likes likes;
         likes = optionalLike.orElse(null);
 
         Set<Scrap> scraps = member.getScraps();
         boolean scrapCheck = scraps.stream().anyMatch(a -> a.getPost().getId().equals(postId) && a.getMember().getId().equals(member.getId()));
-
+      
         model.addAttribute("scrapCheck", scrapCheck);
         model.addAttribute("like", likes);
+        model.addAttribute("categoryList", categoryList);
         model.addAttribute("post", post);
         model.addAttribute("commentForm", new CommentForm());
         model.addAttribute("prev_content", categoryId);
@@ -66,15 +70,20 @@ public class PostController {
     @GetMapping("/board/{categoryId}")
     public String board(@PathVariable("categoryId") Long categoryId, @PageableDefault Pageable pageable, Model model) {
         Category category = categoryService.findOne(categoryId);
-        Page<Post> postList = postService.getPostListByCategory(category, pageable);
-        model.addAttribute("boardList", postList);
+        List<Category> categoryList = categoryService.findAll();
+        Page<Post> boardList = postService.getPostListByCategory(category, pageable);
+      
+        model.addAttribute("categoryList", categoryList);
+        model.addAttribute("boardList", boardList);
         model.addAttribute("category", category);
         return "post/board";
     }
 
     @GetMapping("/write/{categoryId}")
     public String post(@PathVariable("categoryId") Long categoryId, Model model) {
+        List<Category> categoryList = categoryService.findAll();
         Category category = categoryService.findOne(categoryId);
+        model.addAttribute("categoryList", categoryList);
         model.addAttribute("categoryName", categoryId);
         return "post/write";
     }

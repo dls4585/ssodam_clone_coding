@@ -18,7 +18,8 @@
 
                     <div class="modal-footer">
                         <button type="button submit mb-5" class="btn btn-danger btn-block">로그인</button>
-                        <button type="button" class="btn btn-primary btn-block" th:href="@{/signup}">회원가입</button>
+                        <button type="button" class="btn btn-danger btn-block" th:onclick="location.href='/findPassword'"> 비밀번호 찾기</button>
+                        <button type="button" class="btn btn-primary btn-block" th:onclick="location.href='/signup'">회원가입</button>
                     </div>
                 </form>
             </div>
