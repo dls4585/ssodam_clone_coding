@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="fragment-admin-sidebar" class="col-sm-2 mr-3 box shadow" id="sidebar-wrapper">
+    <ul class="nav flex-column">
+        <li class="font-weight-bold big pt-1">회원</li>
+        <li class="nav-item">
+            <a class="ml-2 small" th:href="@{/admin/member}">회원 목록</a>
+        </li>
+
+        <li class="font-weight-bold big pt-1">카테고리</li>
+        <li class="nav-item">
+            <a class="ml-2 small" th:href="@{/admin/category/커뮤니티}">커뮤니티</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="ml-2 small" th:href="@{/admin/category/새내기}">새내기</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="ml-2 small" th:href="@{/admin/category/커리어}">커리어</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="ml-2 small" th:href="@{/admin/category/생활}">생활</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="ml-2 small" th:href="@{/admin/category/족보실}">족보실</a>
+        </li>
+
+    </ul>
+</div>
+</html>

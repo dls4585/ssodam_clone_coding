@@ -8,10 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ssodam.ssodam.domain.Category;
 import ssodam.ssodam.domain.Comment;
 import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
 import ssodam.ssodam.repository.CommentRepository;
+import ssodam.ssodam.service.CategoryService;
 import ssodam.ssodam.service.CommentService;
 import ssodam.ssodam.service.MemberService;
 import ssodam.ssodam.service.PostService;
@@ -23,10 +25,12 @@ import java.util.List;
 public class MyPageController {
 
     private final MemberService memberService;
-
+    private final CategoryService categoryService;
     @GetMapping("/me")
     public String myPageHome(Model model, @AuthenticationPrincipal Member currentMember) {
         MemberForm memberForm = new MemberForm();
+        List<Category> categoryList = categoryService.findAll();
+        model.addAttribute("categoryList", categoryList);
         memberForm.setName(currentMember.getUsername());
         model.addAttribute("memberForm", memberForm);
         return "mypage/me";
@@ -45,6 +49,8 @@ public class MyPageController {
 
     @GetMapping("/password")
     public String passwordView(Model model) {
+        List<Category> categoryList = categoryService.findAll();
+        model.addAttribute("categoryList", categoryList);
         model.addAttribute("passwordForm", new PasswordForm());
         return "mypage/password";
     }
@@ -84,6 +90,8 @@ public class MyPageController {
     @GetMapping("/contents")
     public String myContents(Model model, @AuthenticationPrincipal Member currentMember) {
         List<Post> posts = currentMember.getPosts();
+        List<Category> categoryList = categoryService.findAll();
+        model.addAttribute("categoryList", categoryList);
         model.addAttribute("posts", posts);
         return "mypage/contents";
     }
@@ -91,6 +99,8 @@ public class MyPageController {
     @GetMapping("/comments")
     public String myComments(Model model, @AuthenticationPrincipal Member currentMember) {
         List<Comment> comments = currentMember.getComments();
+        List<Category> categoryList = categoryService.findAll();
+        model.addAttribute("categoryList", categoryList);
         model.addAttribute("comments", comments);
         return "mypage/comments";
     }

@@ -7,59 +7,75 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
+            <div class="collapse navbar-collapse" id="navbarResponsive" >
                 <ul class="navbar-nav mr-2">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown" href="#">커뮤니티</a>
+                    <li class="nav-item dropdown" >
+                        <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown" href="#" >커뮤니티</a>
+
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" th:href="@{/board/1}">자유게시판</a>
-                            <a class="dropdown-item" th:href="@{/board/2}">익게1</a>
-                            <a class="dropdown-item" th:href="@{/board/3}">익게2</a>
-                            <a class="dropdown-item" th:href="@{/board/4}">연애상담소</a>
-                            <a class="dropdown-item" th:href="@{/board/5}">주식/투자</a>
-                            <a class="dropdown-item" th:href="@{/board/6}">맛집</a>
-                            <a class="dropdown-item" th:href="@{/board/7}">헬스</a>
-                            <a class="dropdown-item" th:href="@{/board/8}">졸업생</a>
+                            <a th:each="category: ${categoryList}" th:if="${category.categoryClass == '커뮤니티'}" class="dropdown-item" th:href="@{/board/{categoryId}(categoryId=${category.id})}"
+                            th:text="${category.name}"></a>
                         </div>
                     </li>
+
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown" href="#">새내기</a>
+                        <div class="dropdown-menu">
+                            <a th:each="category: ${categoryList}" th:if="${category.categoryClass == '새내기'}" class="dropdown-item" th:href="@{/board/{categoryId}(categoryId=${category.id})}"
+                               th:text="${category.name}"></a>
+                        </div>
                     </li>
+
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown" href="#">커리어</a>
+                        <div class="dropdown-menu">
+                            <a th:each="category: ${categoryList}" th:if="${category.categoryClass == '커리어'}" class="dropdown-item" th:href="@{/board/{categoryId}(categoryId=${category.id})}"
+                               th:text="${category.name}"></a>
+                        </div>
                     </li>
+
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown" href="#">생활</a>
+                        <div class="dropdown-menu">
+                            <a th:each="category: ${categoryList}" th:if="${category.categoryClass == '생활'}" class="dropdown-item" th:href="@{/board/{categoryId}(categoryId=${category.id})}"
+                               th:text="${category.name}"></a>
+                        </div>
                     </li>
+
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown" href="#">족보실</a>
+                        <div class="dropdown-menu">
+                            <a th:each="category: ${categoryList}" th:if="${category.categoryClass == '족보실'}" class="dropdown-item" th:href="@{/board/{categoryId}(categoryId=${category.id})}"
+                               th:text="${category.name}"></a>
+                        </div>
                     </li>
+
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown" href="#">전체글</a>
+                        <a class="nav-link" id="navbardrop" href="#">전체글</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown" href="#">인기글</a>
+                        <a class="nav-link" id="navbardrop" href="#">인기글</a>
                     </li>
                 </ul>
 
                 <ul class="navbar-nav ml-auto">
-
-                    <li class="nav-link">
+                    <li class="nav-item">
+                        <li sec:authorize="hasRole('ROLE_ADMIN')"><a class="nav-link" th:href="@{/admin/member}">관리</a></li>
+                        <li sec:authorize="hasRole('ROLE_USER')"><a class="nav-link" th:href="@{/me}">내 페이지</a></li>
                         <li sec:authorize="isAnonymous()"><a class="nav-link" th:href="@{/signup}">회원가입</a></li>
-                        <li sec:authorize="isAuthenticated()"><a class="nav-link" th:href="@{/me}">내 페이지</a></li>
+                    </li>
+
                     <li class="nav-item">
                         <li sec:authorize="isAnonymous()"><a class="nav-link" data-toggle="modal" data-target="#loginModal"}>로그인</a></li>
                         <li sec:authorize="isAuthenticated()"><a class="nav-link" th:href="@{/logout}">로그아웃</a></li>
                     </li>
 
-                    <th:block th:replace="loginModal :: loginModal"></th:block>
+                    <th:block th:replace="login/loginModal :: loginModal"></th:block>
                 </ul>
             </div>
         </div>
     </nav>
-
     <script>
-
     </script>
 </div>
 </html>

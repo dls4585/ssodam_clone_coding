@@ -15,6 +15,8 @@ import ssodam.ssodam.domain.MemberRole;
 import ssodam.ssodam.repository.MemberRepository;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -64,6 +66,7 @@ public class MemberServiceImpl implements MemberService {
                 Member.builder()
                         .username(form.getUsername())
                         .password(form.getPassword())
+                        .createDate(LocalDateTime.now())
                         .build()).getId();
     }
 
@@ -71,5 +74,9 @@ public class MemberServiceImpl implements MemberService {
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
     }
+
+    @Override
+    public List<Member> findAll() { return memberRepository.findAll(); }
+
 }
 
