@@ -207,6 +207,22 @@ public class PostController {
         return "redirect:" +referer;
     }
 
+    @GetMapping("/content/like/cancel/{post_id}")
+    public String likeCancel(@PathVariable("post_id") Long postId,
+                             @AuthenticationPrincipal Member currentMember,
+                             HttpServletRequest request) {
+        Post post = postService.findOne(postId);
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.orElse(null);
+
+        postService.likeCancel(post, member);
+
+        String referer = request.getHeader("Referer");
+
+        return "redirect:" + referer;
+
+    }
+
     @GetMapping("/content/dislike/{post_id}")
     public String dislikePost(@PathVariable("post_id") Long postId,
                               @AuthenticationPrincipal Member currentMember,
@@ -215,8 +231,22 @@ public class PostController {
         Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
         Member member = optionalMember.orElse(null);
 
-        assert member != null;
         postService.decreaseLike(post, member);
+
+        String referer = request.getHeader("Referer");
+
+        return "redirect:" +referer;
+    }
+
+    @GetMapping("/content/dislike/cancel/{post_id}")
+    public String dislikeCancel(@PathVariable("post_id") Long postId,
+                                @AuthenticationPrincipal Member currentMember,
+                                HttpServletRequest request) {
+        Post post = postService.findOne(postId);
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.orElse(null);
+
+        postService.dislikeCancel(post, member);
 
         String referer = request.getHeader("Referer");
 
@@ -231,7 +261,6 @@ public class PostController {
         Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
         Member member = optionalMember.orElse(null);
 
-        assert member != null;
         postService.scrapPost(post, member);
 
         String referer = request.getHeader("Referer");

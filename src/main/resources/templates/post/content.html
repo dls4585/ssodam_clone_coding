@@ -16,13 +16,13 @@
     <span th:unless="${like == null}">
         <span th:if="${like.status == T(ssodam.ssodam.domain.LikeStatus).LIKE}">
 <!--            Like 일때-->
-            <button class="btn-danger" style="color:white">좋아요</button>
+            <button class="btn-danger" style="color:white"><a th:href="@{/content/like/cancel/{post_id} (post_id=${post.id})}" style="color:white">좋아요 취소</a></button>
             <button id="dislike_button" class="btn-primary"><a th:href="@{/content/dislike/{post_id}(post_id=${post.id})}" style="color:white">싫어요</a></button>
         </span>
         <span th:if="${like.status == T(ssodam.ssodam.domain.LikeStatus).DISLIKE}">
 <!--            DISLIKE일 때-->
             <button id="like_button" class="btn-primary"><a th:href="@{/content/like/{post_id}(post_id=${post.id})}" style="color:#ffffff">좋아요</a></button>
-            <button class="btn-danger" style="color:white">싫어요</button>
+            <button class="btn-danger" style="color:white"><a th:href="@{/content/dislike/cancel/{post_id}(post_id=${post.id})}" style="color: white">싫어요 취소</a></button>
         </span>
     </span>
     <span th:if="${scrapCheck == true}">

@@ -132,8 +132,6 @@ public class PostServiceImpl implements PostService{
             post.setLikes(likes+1);
             likeRepository.save(like);
         }
-
-
     }
 
     @Override
@@ -173,5 +171,31 @@ public class PostServiceImpl implements PostService{
         post.getScrappedBy().removeIf(m -> m.getMember().equals(member));
         member.getScraps().removeIf(p -> p.getPost().equals(post));
         scrapRepository.deleteByPostAndMember(post, member);
+    }
+
+    @Override
+    @Transactional
+    public void likeCancel(Post post, Member member) {
+        int likes = post.getLikes();
+        post.setLikes(likes-1);
+
+        Optional<Likes> optionalLikes = likeRepository.findByMemberIdAndPostId(member.getId(), post.getId());
+        Likes like = optionalLikes.orElse(null);
+
+        assert like != null && like.getStatus() == LikeStatus.LIKE;
+        likeRepository.deleteById(like.getId());
+    }
+
+    @Override
+    @Transactional
+    public void dislikeCancel(Post post, Member member) {
+        int likes = post.getLikes();
+        post.setLikes(likes+1);
+
+        Optional<Likes> optionalLikes = likeRepository.findByMemberIdAndPostId(member.getId(), post.getId());
+        Likes like = optionalLikes.orElse(null);
+
+        assert like != null && like.getStatus() == LikeStatus.DISLIKE;
+        likeRepository.deleteById(like.getId());
     }
 }

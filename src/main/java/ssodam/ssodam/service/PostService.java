@@ -33,4 +33,7 @@ public interface PostService {
     public void decreaseLike(Post post, Member member);
     public void scrapPost(Post post, Member member);
     public void scrapCancel(Post post, Member member);
+
+    public void likeCancel(Post post, Member member);
+    public void dislikeCancel(Post post, Member member);
 }
