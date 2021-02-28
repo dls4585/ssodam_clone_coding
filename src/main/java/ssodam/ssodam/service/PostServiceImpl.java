@@ -116,19 +116,20 @@ public class PostServiceImpl implements PostService{
     @Transactional
     public void increaseLike(Post post, Member member) {
         int likes = post.getLikes();
-        post.setLikes(likes+1);
 
         Optional<Likes> optional = likeRepository.findByMemberIdAndPostId(member.getId(), post.getId());
         if(optional.isPresent()) {
             Likes like = optional.get();
             if(like.getStatus() == LikeStatus.DISLIKE) {
                 like.setStatus(LikeStatus.LIKE);
+                post.setLikes(likes+2);
             }
             else {
                 return;
             }
         } else {
             Likes like = Likes.createLike(member.getId(), post.getId(), LikeStatus.LIKE);
+            post.setLikes(likes+1);
             likeRepository.save(like);
         }
 
@@ -139,19 +140,20 @@ public class PostServiceImpl implements PostService{
     @Transactional
     public void decreaseLike(Post post, Member member) {
         int likes = post.getLikes();
-        post.setLikes(likes-1);
 
         Optional<Likes> optional = likeRepository.findByMemberIdAndPostId(member.getId(), post.getId());
         if(optional.isPresent()) {
             Likes like = optional.get();
             if(like.getStatus() == LikeStatus.LIKE) {
                 like.setStatus(LikeStatus.DISLIKE);
+                post.setLikes(likes-2);
             }
             else {
                 return;
             }
         } else {
             Likes like = Likes.createLike(member.getId(), post.getId(), LikeStatus.DISLIKE);
+            post.setLikes(likes-1);
             likeRepository.save(like);
         }
     }

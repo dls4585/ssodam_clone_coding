@@ -43,12 +43,13 @@ public class PostController {
         postService.increaseVisit(post);
 
         Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
-        Member member = optionalMember.get();
+        Member member = optionalMember.orElse(null);
 
         Long categoryId = Long.parseLong(prev_content.substring(7));
 
         List<Category> categoryList = categoryService.findAll();
 
+        assert member != null;
         Optional<Likes> optionalLike = likeRepository.findByMemberIdAndPostId(member.getId(), postId);
         Likes likes;
         likes = optionalLike.orElse(null);
@@ -95,7 +96,7 @@ public class PostController {
 
         // 추가 변경
         Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
-        postForm.setMember(optionalMember.get());
+        postForm.setMember(optionalMember.orElse(null));
         postService.post(postForm);
 
         return "redirect:/board/{categoryId}";
@@ -108,8 +109,9 @@ public class PostController {
                                @AuthenticationPrincipal Member currentMember) {
 
         Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
-        Member member = optionalMember.get();
+        Member member = optionalMember.orElse(null);
 
+        assert member != null;
         commentService.writeComment(member.getId(), postId, form.getContents());
 
         String referer = request.getHeader("Referer");
@@ -124,8 +126,9 @@ public class PostController {
         String content = request.getParameter("content");
 
         Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
-        Member member = optionalMember.get();
+        Member member = optionalMember.orElse(null);
 
+        assert member != null;
         commentService.writeSubcomment(member.getId(), commentId, content);
 
         String referer = request.getHeader("Referer");
@@ -139,8 +142,9 @@ public class PostController {
         String content = request.getParameter("content");
 
         Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
-        Member member = optionalMember.get();
+        Member member = optionalMember.orElse(null);
 
+        assert member != null;
         commentService.updateComment(member.getId(), commentId, content);
 
         String referer = request.getHeader("Referer");
@@ -157,8 +161,9 @@ public class PostController {
         Long postId = commentService.findOne(commentId).getPost().getId();
 
         Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
-        Member member = optionalMember.get();
+        Member member = optionalMember.orElse(null);
 
+        assert member != null;
         commentService.deleteComment(member.getId(), postId, commentId);
 
         String referer = request.getHeader("Referer");
@@ -192,7 +197,9 @@ public class PostController {
                            HttpServletRequest request) {
         Post post = postService.findOne(postId);
         Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
-        Member member = optionalMember.get();
+        Member member = optionalMember.orElse(null);
+
+        assert member != null;
         postService.increaseLike(post, member);
 
         String referer = request.getHeader("Referer");
@@ -206,7 +213,9 @@ public class PostController {
                               HttpServletRequest request) {
         Post post = postService.findOne(postId);
         Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
-        Member member = optionalMember.get();
+        Member member = optionalMember.orElse(null);
+
+        assert member != null;
         postService.decreaseLike(post, member);
 
         String referer = request.getHeader("Referer");
@@ -220,8 +229,9 @@ public class PostController {
                             HttpServletRequest request) {
         Post post = postService.findOne(postId);
         Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
-        Member member = optionalMember.get();
+        Member member = optionalMember.orElse(null);
 
+        assert member != null;
         postService.scrapPost(post, member);
 
         String referer = request.getHeader("Referer");
@@ -235,8 +245,9 @@ public class PostController {
                               HttpServletRequest request) {
         Post post = postService.findOne(postId);
         Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
-        Member member = optionalMember.get();
+        Member member = optionalMember.orElse(null);
 
+        assert member != null;
         postService.scrapCancel(post, member);
 
         String referer = request.getHeader("Referer");
