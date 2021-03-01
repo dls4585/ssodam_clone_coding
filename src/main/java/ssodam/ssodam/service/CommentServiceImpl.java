@@ -1,6 +1,10 @@
 package ssodam.ssodam.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ssodam.ssodam.domain.Comment;
 import ssodam.ssodam.domain.Member;
@@ -155,5 +159,12 @@ public class CommentServiceImpl implements CommentService {
     /* 포스트로 댓글 찾기 */
     public List<Comment> findByPost(Post post){
         return commentRepository.findByPost(post);
+    }
+
+    @Override
+    public Page<Comment> findListByMember(Member member, Pageable pageable) {
+        int page = (pageable.getPageNumber()==0) ? 0 : (pageable.getPageNumber()-1);
+        pageable = PageRequest.of(page,10, Sort.by("id").descending());
+        return commentRepository.findByMember(member, pageable);
     }
 }

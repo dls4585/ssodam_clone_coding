@@ -36,7 +36,6 @@ public class    HomeController {
     }
 
     @GetMapping("/signup")
-
     public String signup(Model model) {
         List<Category> categoryList = categoryService.findAll();
         model.addAttribute("categoryList", categoryList);

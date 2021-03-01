@@ -8,4 +8,5 @@ public interface CategoryService {
     public Long createCategory(Category category);
     public Category findOne(Long categoryId);
     public List<Category> findAll();
+    public void deleteCategory(Long categoryId);
 }

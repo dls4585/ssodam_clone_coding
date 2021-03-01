@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ssodam.ssodam.domain.*;
+import ssodam.ssodam.repository.LikeRepository;
 import ssodam.ssodam.service.CategoryService;
 import ssodam.ssodam.service.CommentService;
 import ssodam.ssodam.service.MemberService;
@@ -17,6 +18,7 @@ import ssodam.ssodam.service.PostService;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,20 +29,35 @@ public class PostController {
     private final PostService postService;
     private final CategoryService categoryService;
     private final CommentService commentService;
+    private final LikeRepository likeRepository;
 
 
     @GetMapping("content/{postId}")
     public String postView(@PathVariable("postId") Long postId,
                         @RequestParam("prev") Long prev,
                         @RequestParam("prev_content") String prev_content,
+                        @AuthenticationPrincipal Member currentMember,
                         Model model){
 
         Post post = postService.findOne(postId);
         postService.increaseVisit(post);
-      
+
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+
         Long categoryId = Long.parseLong(prev_content.substring(7));
 
         List<Category> categoryList = categoryService.findAll();
+
+        Optional<Likes> optionalLike = likeRepository.findByMemberIdAndPostId(member.getId(), postId);
+        Likes likes;
+        likes = optionalLike.orElse(null);
+
+        Set<Scrap> scraps = member.getScraps();
+        boolean scrapCheck = scraps.stream().anyMatch(a -> a.getPost().getId().equals(postId) && a.getMember().getId().equals(member.getId()));
+      
+        model.addAttribute("scrapCheck", scrapCheck);
+        model.addAttribute("like", likes);
         model.addAttribute("categoryList", categoryList);
         model.addAttribute("post", post);
         model.addAttribute("commentForm", new CommentForm());
@@ -54,8 +71,9 @@ public class PostController {
     public String board(@PathVariable("categoryId") Long categoryId, @PageableDefault Pageable pageable, Model model) {
         Category category = categoryService.findOne(categoryId);
         List<Category> categoryList = categoryService.findAll();
-        model.addAttribute("categoryList", categoryList);
         Page<Post> boardList = postService.getPostListByCategory(category, pageable);
+      
+        model.addAttribute("categoryList", categoryList);
         model.addAttribute("boardList", boardList);
         model.addAttribute("category", category);
         return "post/board";
@@ -64,8 +82,8 @@ public class PostController {
     @GetMapping("/write/{categoryId}")
     public String post(@PathVariable("categoryId") Long categoryId, Model model) {
         List<Category> categoryList = categoryService.findAll();
-        model.addAttribute("categoryList", categoryList);
         Category category = categoryService.findOne(categoryId);
+        model.addAttribute("categoryList", categoryList);
         model.addAttribute("categoryName", categoryId);
         return "post/write";
     }
@@ -74,7 +92,10 @@ public class PostController {
     public String writePost(@PathVariable("categoryId") Long categoryId, @AuthenticationPrincipal Member currentMember, PostForm postForm){
         Category category = categoryService.findOne(categoryId);
         postForm.setCategory(category);
-        postForm.setMember(currentMember);
+
+        // 추가 변경
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        postForm.setMember(optionalMember.get());
         postService.post(postForm);
 
         return "redirect:/board/{categoryId}";
@@ -142,5 +163,84 @@ public class PostController {
 
         String referer = request.getHeader("Referer");
         return "redirect:"+referer;
+    }
+
+    @GetMapping("/search/{categoryId}")
+    public String searchPost(HttpServletRequest request,
+                             @PageableDefault Pageable pageable,
+                             @PathVariable("categoryId") Long categoryId,
+                             Model model) {
+        String search = request.getParameter("search");
+        Category category = categoryService.findOne(categoryId);
+
+        Page<Post> result;
+        if(categoryId == 0L) {
+            result = postService.getPostListByTitle(search, pageable);
+        }
+        else {
+            result = postService.getPostListByTitleInCategory(search, category, pageable);
+        }
+        model.addAttribute("boardList", result);
+        model.addAttribute("category", category);
+
+        return "post/board";
+    }
+
+    @GetMapping("/content/like/{post_id}")
+    public String likePost(@PathVariable("post_id") Long postId,
+                           @AuthenticationPrincipal Member currentMember,
+                           HttpServletRequest request) {
+        Post post = postService.findOne(postId);
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+        postService.increaseLike(post, member);
+
+        String referer = request.getHeader("Referer");
+
+        return "redirect:" +referer;
+    }
+
+    @GetMapping("/content/dislike/{post_id}")
+    public String dislikePost(@PathVariable("post_id") Long postId,
+                              @AuthenticationPrincipal Member currentMember,
+                              HttpServletRequest request) {
+        Post post = postService.findOne(postId);
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+        postService.decreaseLike(post, member);
+
+        String referer = request.getHeader("Referer");
+
+        return "redirect:" +referer;
+    }
+
+    @GetMapping("/content/scrap/{post_id}")
+    public String scrapPost(@PathVariable("post_id") Long postId,
+                            @AuthenticationPrincipal Member currentMember,
+                            HttpServletRequest request) {
+        Post post = postService.findOne(postId);
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+
+        postService.scrapPost(post, member);
+
+        String referer = request.getHeader("Referer");
+
+        return "redirect:"+referer;
+    }
+
+    @GetMapping("/content/scrap/cancel/{post_id}")
+    public String scrapCancel(@PathVariable("post_id") Long postId,
+                              @AuthenticationPrincipal Member currentMember,
+                              HttpServletRequest request) {
+        Post post = postService.findOne(postId);
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+
+        postService.scrapCancel(post, member);
+
+        String referer = request.getHeader("Referer");
+
+        return "redirect:" + referer;
     }
 }

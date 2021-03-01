@@ -2,6 +2,8 @@ package ssodam.ssodam.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.dom4j.rule.Mode;
+import org.springframework.data.domain.*;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -12,20 +14,27 @@ import ssodam.ssodam.domain.Category;
 import ssodam.ssodam.domain.Comment;
 import ssodam.ssodam.domain.Member;
 import ssodam.ssodam.domain.Post;
+import ssodam.ssodam.domain.Scrap;
 import ssodam.ssodam.repository.CommentRepository;
 import ssodam.ssodam.service.CategoryService;
 import ssodam.ssodam.service.CommentService;
 import ssodam.ssodam.service.MemberService;
 import ssodam.ssodam.service.PostService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
 public class MyPageController {
 
     private final MemberService memberService;
+    private final PostService postService;
+    private final CommentService commentService;
     private final CategoryService categoryService;
+
     @GetMapping("/me")
     public String myPageHome(Model model, @AuthenticationPrincipal Member currentMember) {
         MemberForm memberForm = new MemberForm();
@@ -89,23 +98,54 @@ public class MyPageController {
     }
 
     @GetMapping("/contents")
-    public String myContents(Model model, @AuthenticationPrincipal Member currentMember) {
-        List<Post> posts = currentMember.getPosts();
+    public String myContents(Model model, @AuthenticationPrincipal Member currentMember,
+                             @PageableDefault Pageable pageable) {
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+        Page<Post> posts = postService.getPostListByMember(member, pageable);
+  
         List<Category> categoryList = categoryService.findAll();
+  
         model.addAttribute("categoryList", categoryList);
         model.addAttribute("posts", posts);
         return "mypage/contents";
     }
 
     @GetMapping("/comments")
-    public String myComments(Model model, @AuthenticationPrincipal Member currentMember) {
-        List<Comment> comments = currentMember.getComments();
+    public String myComments(Model model, @AuthenticationPrincipal Member currentMember,
+                             @PageableDefault Pageable pageable) {
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+        Page<Comment> comments = commentService.findListByMember(member, pageable);
+
         List<Category> categoryList = categoryService.findAll();
+  
         model.addAttribute("categoryList", categoryList);
         model.addAttribute("comments", comments);
         return "mypage/comments";
     }
 
+    @GetMapping("/scrap")
+    public String myScrap(Model model,
+                          @AuthenticationPrincipal Member currentMember,
+                          @PageableDefault Pageable pageable) {
+        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
+        Member member = optionalMember.get();
+        Set<Scrap> scraps = member.getScraps();
+        System.out.println("scraps = " + scraps);
+        List<Post> scrappedPosts = new ArrayList<>();
+        for (Scrap scrap : scraps) {
+            scrappedPosts.add(scrap.getPost());
+        }
+
+        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
+        pageable = PageRequest.of(page, 10, Sort.by("id").descending());
+
+        Page<Post> posts = new PageImpl<Post>(scrappedPosts, pageable, scraps.size());
+        model.addAttribute("posts", posts);
+
+        return "mypage/scrap";
+    }
     @GetMapping("/deleteMember")
     public String delMember(Model model, String checkWords){
         model.addAttribute("passwordForm", new PasswordForm());

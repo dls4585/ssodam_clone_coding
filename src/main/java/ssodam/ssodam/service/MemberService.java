@@ -16,5 +16,8 @@ public interface MemberService extends UserDetailsService {
     Optional<Member> findByUsername(String username);
     List<Member> findAll();
     Optional<Member> findByEmail(String email);
+    public void deleteMember(Member member);
+    public Member findOne(Long memberId);
+
 }
 
