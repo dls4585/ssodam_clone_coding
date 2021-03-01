@@ -146,6 +146,7 @@ public class MyPageController {
 
         return "mypage/scrap";
     }
+
     @GetMapping("/deleteMember")
     public String delMember(Model model, String checkWords){
         model.addAttribute("passwordForm", new PasswordForm());

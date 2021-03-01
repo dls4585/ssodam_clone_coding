@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import ssodam.ssodam.domain.Category;
 import ssodam.ssodam.domain.MemberForm;
 import ssodam.ssodam.repository.CategoryRepository;
@@ -17,7 +18,8 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class    HomeController {
+@SessionAttributes("member")
+public class HomeController {
     final private MemberService memberService;
     final private PostService postService;
     final private CategoryService categoryService;
@@ -28,7 +30,7 @@ public class    HomeController {
     }
 
     @GetMapping("/home")
-    public String home(Model model) throws Exception{
+    public String home(Model model) throws Exception {
         List<Category> categoryList = categoryService.findAll();
         model.addAttribute("categoryList", categoryList);
         model.addAttribute("postService", postService);
@@ -43,16 +45,14 @@ public class    HomeController {
     }
 
     @PostMapping("/signup")
-    public String execSignup(MemberForm memberForm){
-        if(memberService.findByEmail(memberForm.getEmail()).isPresent()){
+    public String execSignup(MemberForm memberForm) {
+        if (memberService.findByEmail(memberForm.getEmail()).isPresent()) {
             System.out.println("이미 존재하는 이메일");
             return "login/duplicate";
-        }
-        else if(memberService.findByUsername(memberForm.getUsername()).isPresent()){
+        } else if (memberService.findByUsername(memberForm.getUsername()).isPresent()) {
             System.out.println("이미 존재하는 아이디");
             return "login/duplicate";
-        }
-        else {
+        } else {
             memberService.createMember(memberForm);
             return "redirect:/login";
         }
@@ -67,13 +67,17 @@ public class    HomeController {
     public String execLogin() {
         return "redirect:/login/result";
     }
+
     @GetMapping("/login/result")
     public String loginResult() {
         return "redirect:/home";
     }
 
     @GetMapping("/logout")
-    public String execLogout() { return "redirect:/logout/result"; }
+    public String execLogout() {
+        return "redirect:/logout/result";
+    }
+
     @GetMapping("/logout/result")
     public String logoutResult() {
         return "redirect:/home";
