@@ -1,4 +1,9 @@
 spring:
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/?serverTimezone=Asia/Seoul&useSSL=false&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false
     username: root
@@ -17,3 +22,4 @@ spring:
 logging.level:
   org.hibernate.SQL: debug
   # org.hibernate.type: trace
+
