@@ -28,4 +28,12 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     public List<Category> findAll() { return categoryRepository.findAll(); }
+
+    @Override
+    @Transactional
+    public void deleteCategory(Long categoryId) {
+        categoryRepository.deleteById(categoryId);
+        return;
+    }
+
 }
