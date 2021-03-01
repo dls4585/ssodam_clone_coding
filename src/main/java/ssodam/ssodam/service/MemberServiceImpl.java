@@ -92,5 +92,17 @@ public class MemberServiceImpl implements MemberService {
     
     @Override
     public Optional<Member> findByEmail(String email){ return memberRepository.findByEmail(email);}
+
+    @Override
+    @Transactional
+    public void deleteMember(Member member) {
+        memberRepository.delete(member);
+        return;
+    }
+
+    @Override
+    public Member findOne(Long memberId) {
+        return memberRepository.getOne(memberId);
+    }
 }
 
