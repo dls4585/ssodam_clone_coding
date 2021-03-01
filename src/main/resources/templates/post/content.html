@@ -4,9 +4,10 @@
 <body>
 <div th:replace="fragments/nav :: fragment-nav"></div>
 
-<td th:text="'title: '+${post.getTitle()}"></td>
-<td th:text="'member: '+${post.getMember().getUsername()}"></td>
-<td th:text="'content: '+${post.getContents()}"></td>
+<div th:text="'title: '+${post.getTitle()}"></div>
+<div th:text="'member: '+${post.getMember().getUsername()}"></div>
+<div th:text="'content: '+${post.getContents()}"></div>
+<div th:text="'likes: ' +${post.likes}"></div>
 <br><br>
 <div id="like_dislike_scrap area">
     <span th:if="${like == null}">
@@ -159,7 +160,6 @@
 
         document.body.appendChild(form);
         form.submit();
-
     }
 </script>
 </body>
