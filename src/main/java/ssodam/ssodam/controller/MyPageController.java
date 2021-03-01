@@ -134,17 +134,18 @@ public class MyPageController {
         Set<Scrap> scraps = member.getScraps();
         System.out.println("scraps = " + scraps);
         List<Post> scrappedPosts = new ArrayList<>();
-        for(Scrap scrap : scraps) {
+        for (Scrap scrap : scraps) {
             scrappedPosts.add(scrap.getPost());
         }
 
-        int page = (pageable.getPageNumber()==0) ? 0 : (pageable.getPageNumber()-1);
-        pageable = PageRequest.of(page,10, Sort.by("id").descending());
+        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
+        pageable = PageRequest.of(page, 10, Sort.by("id").descending());
 
         Page<Post> posts = new PageImpl<Post>(scrappedPosts, pageable, scraps.size());
         model.addAttribute("posts", posts);
 
         return "mypage/scrap";
+    }
 
     @GetMapping("/deleteMember")
     public String delMember(Model model, String checkWords){
