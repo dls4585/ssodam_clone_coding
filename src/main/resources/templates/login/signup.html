@@ -2,8 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header"></head>
 <body>
-<h1>회원 가입</h1>
-<hr>
+    <div th:replace="fragments/nav :: fragment-nav"></div>
 
 <form th:action="@{/signup}" method="post">
     <div class="form-group">

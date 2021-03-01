@@ -1,0 +1,30 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+    <div th:replace="fragments/nav :: fragment-nav"></div>
+    <div class="container d-flex mt-5">
+        <div th:replace="fragments/admin-sidebar :: fragment-admin-sidebar"></div>
+        <table class="box shadow table">
+            <thead>
+            <tr>
+                <td class="h4" colspan="6">회원 관리</td>
+            </tr>
+
+            <tr>
+                <th style="width: 10%">번호</th>
+                <th style="width: 10%">이름</th>
+                <th style="width: 10%">가입 날짜</th>
+                <th style="width: 10%"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member: ${memberList}">
+                <td style="width: 10%" th:text="${member.id}"></td>
+                <td style="width: 10%" th:text="${member.username}">익명</td>
+                <td style="width: 10%" th:text="${#temporals.format(member.createDate, 'yyyy/MM/dd HH:mm')}">날짜</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -7,16 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ssodam.ssodam.domain.Category;
-import ssodam.ssodam.domain.Member;
-import ssodam.ssodam.domain.Post;
-import ssodam.ssodam.domain.PostForm;
-import ssodam.ssodam.repository.CategoryRepository;
-import ssodam.ssodam.repository.MemberRepository;
-import ssodam.ssodam.repository.PostRepository;
+import ssodam.ssodam.domain.*;
+import ssodam.ssodam.repository.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -25,8 +21,9 @@ import java.util.List;
 public class PostServiceImpl implements PostService{
 
     private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
+    private final LikeRepository likeRepository;
+    private final ScrapRepository scrapRepository;
 
     @Override
     @Transactional
@@ -92,5 +89,87 @@ public class PostServiceImpl implements PostService{
     public void increaseVisit(Post post) {
         int visit = post.getVisit();
         post.setVisit(visit+1);
+    }
+
+    @Override
+    public Page<Post> getPostListByTitle(String search, Pageable pageable) {
+        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber()-1);
+        pageable = PageRequest.of(page, 10, Sort.by("id").descending());
+        return postRepository.findByTitleContaining(search, pageable);
+    }
+
+    @Override
+    public Page<Post> getPostListByTitleInCategory(String search, Category category, Pageable pageable) {
+        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber()-1);
+        pageable = PageRequest.of(page, 10, Sort.by("id").descending());
+        return postRepository.findByTitleContainingAndCategory(search, category, pageable);
+    }
+
+    @Override
+    public Page<Post> getPostListByMember(Member member, Pageable pageable) {
+        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() -1);
+        pageable = PageRequest.of(page, 10, Sort.by("id").descending());
+        return postRepository.findByMember(member, pageable);
+    }
+
+    @Override
+    @Transactional
+    public void increaseLike(Post post, Member member) {
+        int likes = post.getLikes();
+        post.setLikes(likes+1);
+
+        Optional<Likes> optional = likeRepository.findByMemberIdAndPostId(member.getId(), post.getId());
+        if(optional.isPresent()) {
+            Likes like = optional.get();
+            if(like.getStatus() == LikeStatus.DISLIKE) {
+                like.setStatus(LikeStatus.LIKE);
+            }
+            else {
+                return;
+            }
+        } else {
+            Likes like = Likes.createLike(member.getId(), post.getId(), LikeStatus.LIKE);
+            likeRepository.save(like);
+        }
+
+
+    }
+
+    @Override
+    @Transactional
+    public void decreaseLike(Post post, Member member) {
+        int likes = post.getLikes();
+        post.setLikes(likes-1);
+
+        Optional<Likes> optional = likeRepository.findByMemberIdAndPostId(member.getId(), post.getId());
+        if(optional.isPresent()) {
+            Likes like = optional.get();
+            if(like.getStatus() == LikeStatus.LIKE) {
+                like.setStatus(LikeStatus.DISLIKE);
+            }
+            else {
+                return;
+            }
+        } else {
+            Likes like = Likes.createLike(member.getId(), post.getId(), LikeStatus.DISLIKE);
+            likeRepository.save(like);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void scrapPost(Post post, Member member) {
+        Scrap scrap = Scrap.createScrap(member, post);
+
+        post.getScrappedBy().add(scrap);
+        member.getScraps().add(scrap);
+    }
+
+    @Override
+    @Transactional
+    public void scrapCancel(Post post, Member member) {
+        post.getScrappedBy().removeIf(m -> m.getMember().equals(member));
+        member.getScraps().removeIf(p -> p.getPost().equals(post));
+        scrapRepository.deleteByPostAndMember(post, member);
     }
 }
