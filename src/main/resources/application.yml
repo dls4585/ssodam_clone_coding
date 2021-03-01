@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/ssodam?serverTimezone=Asia/Seoul&useSSL=false&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/?serverTimezone=Asia/Seoul&useSSL=false&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false
     username: root
-    password: tjwns94!
+    password: 
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
