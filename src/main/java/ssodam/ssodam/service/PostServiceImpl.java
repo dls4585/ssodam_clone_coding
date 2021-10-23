@@ -105,7 +105,7 @@ public class PostServiceImpl implements PostService{
         return postRepository.findByTitleContainingAndCategory(search, category, pageable);
     }
 
-    @Override
+    @Override // -> @PageableDefault의 파라미터로 넘겨서 설정하도록
     public Page<Post> getPostListByMember(Member member, Pageable pageable) {
         int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() -1);
         pageable = PageRequest.of(page, 10, Sort.by("id").descending());

@@ -5,6 +5,7 @@ import org.dom4j.rule.Mode;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,29 +36,32 @@ public class MyPageController {
     private final CommentService commentService;
     private final CategoryService categoryService;
 
-    @GetMapping("/me")
+    @GetMapping("/mypage/me")
     public String myPageHome(Model model, @AuthenticationPrincipal Member currentMember) {
-        MemberForm memberForm = new MemberForm();
         List<Category> categoryList = categoryService.findAll();
-        model.addAttribute("categoryList", categoryList);
+
+        MemberForm memberForm = new MemberForm();
         memberForm.setName(currentMember.getUsername());
         memberForm.setEmail(currentMember.getEmail());
+
+        model.addAttribute("categoryList", categoryList);
         model.addAttribute("memberForm", memberForm);
         return "mypage/me";
     }
 
-    @PostMapping("/me")
+    @PostMapping("/mypage/me")
     public String userEdit(MemberForm form, BindingResult result, @AuthenticationPrincipal Member currentMember) {
         if(result.hasErrors()) {
-            return "redirect:/me";
+            return "redirect:/mypage/me";
         }
-        memberService.updateName(currentMember.getUsername(), form.getName());
+        memberService.updateInfo(currentMember.getUsername(), form.getName(), form.getEmail());
         currentMember.setUsername(form.getName());
+        currentMember.setEmail(form.getEmail());
 
-        return "redirect:/me";
+        return "redirect:/mypage/me";
     }
 
-    @GetMapping("/password")
+    @GetMapping("/mypage/password")
     public String passwordView(Model model) {
         List<Category> categoryList = categoryService.findAll();
         model.addAttribute("categoryList", categoryList);
@@ -65,13 +69,13 @@ public class MyPageController {
         return "mypage/password";
     }
 
-    @PostMapping("/password")
+    @PostMapping("/mypage/password")
     public String passwordEdit(Model model,
                                PasswordForm form,
                                BindingResult result,
                                @AuthenticationPrincipal Member currentMember) {
         if (result.hasErrors()) {
-            return "redirect:/password";
+            return "redirect:/mypage/password";
         }
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -94,14 +98,15 @@ public class MyPageController {
         String encodedNewPwd = encoder.encode(form.getNewPassword());
         memberService.updatePassword(currentMember.getUsername(), encodedNewPwd);
         currentMember.setPassword(encodedNewPwd);
-        return "redirect:/me";
+        return "redirect:/mypage/me";
     }
 
-    @GetMapping("/contents")
+    @GetMapping("/mypage/contents")
     public String myContents(Model model, @AuthenticationPrincipal Member currentMember,
                              @PageableDefault Pageable pageable) {
-        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
-        Member member = optionalMember.get();
+        Member member = memberService.findByUsername(currentMember.getUsername())
+                .orElseThrow(()-> new UsernameNotFoundException(currentMember.getUsername()));
+
         Page<Post> posts = postService.getPostListByMember(member, pageable);
   
         List<Category> categoryList = categoryService.findAll();
@@ -111,11 +116,11 @@ public class MyPageController {
         return "mypage/contents";
     }
 
-    @GetMapping("/comments")
+    @GetMapping("/mypage/comments")
     public String myComments(Model model, @AuthenticationPrincipal Member currentMember,
                              @PageableDefault Pageable pageable) {
-        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
-        Member member = optionalMember.get();
+        Member member = memberService.findByUsername(currentMember.getUsername())
+                .orElseThrow(()-> new UsernameNotFoundException(currentMember.getUsername()));
         Page<Comment> comments = commentService.findListByMember(member, pageable);
 
         List<Category> categoryList = categoryService.findAll();
@@ -125,12 +130,12 @@ public class MyPageController {
         return "mypage/comments";
     }
 
-    @GetMapping("/scrap")
+    @GetMapping("/mypage/scrap")
     public String myScrap(Model model,
                           @AuthenticationPrincipal Member currentMember,
                           @PageableDefault Pageable pageable) {
-        Optional<Member> optionalMember = memberService.findByUsername(currentMember.getUsername());
-        Member member = optionalMember.get();
+        Member member = memberService.findByUsername(currentMember.getUsername())
+                .orElseThrow(()-> new UsernameNotFoundException(currentMember.getUsername()));
         Set<Scrap> scraps = member.getScraps();
         System.out.println("scraps = " + scraps);
         List<Post> scrappedPosts = new ArrayList<>();
@@ -178,7 +183,8 @@ public class MyPageController {
             System.out.println("문장 일치");
         }
 
-        Member member = memberService.findByUsername(currentMember.getUsername()).get();
+        Member member = memberService.findByUsername(currentMember.getUsername())
+                .orElseThrow(()-> new UsernameNotFoundException(currentMember.getUsername()));
         memberService.deleteMember(member.getUsername());
 
         return "redirect:/logout";

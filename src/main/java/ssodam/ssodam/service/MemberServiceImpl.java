@@ -29,8 +29,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Member> member = memberRepository.findByUsername(username);
-        Member memberEntity = member.get();
+        Member memberEntity = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
         List<GrantedAuthority> authorities = new ArrayList<>();
 
@@ -45,10 +45,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public Long updateName(String username, String newName) {
-        Optional<Member> optionalMember = memberRepository.findByUsername(username);
-        Member member = optionalMember.get();
+    public Long updateInfo(String username, String newName, String email) {
+        Member member  = memberRepository.findByUsername(username)
+                .orElseThrow(()-> new UsernameNotFoundException(username));
+
         member.setUsername(newName);
+        member.setEmail(email);
         return member.getId();
     }
 
